@@ -1,0 +1,85 @@
+.saved-papers-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.saved-papers-title {
+  font-size: 20px;
+  font-weight: 400;
+  color: #000000;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.saved-papers-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  width: 600px;
+}
+
+.saved-paper-card {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  padding: 10px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.metadata {
+  display: flex;
+}
+
+.result-info {
+  margin-left: 10px;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #4b16a7;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.title:hover {
+  color: #5d00a8;
+}
+
+.details {
+  list-style-type: none;
+  padding: 0;
+  margin: 5px 0;
+}
+
+.detail {
+  display: inline;
+  margin-right: 10px;
+}
+
+.summary {
+  margin-top: 10px;
+  line-height: 1.5;
+  color: #666;
+}
+
+.remove-button {
+  display: inline-block;
+  padding: 8px 10px;
+  background-color: #d9534f;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 0;
+  margin-left: 10px;
+}
+
+.remove-button:hover {
+  background-color: #c9302c;
+}

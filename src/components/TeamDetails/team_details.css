@@ -1,0 +1,86 @@
+.team-details {
+  margin: 0 auto;
+  display: flex;
+  flex-direction: row;
+}
+.right_col {
+  margin-top: 18px;
+  margin-bottom: 20px;
+  width: 70%;
+  padding-left: 5px;
+}
+.left_col {
+  width: 20%;
+  margin-right: 20px;
+  margin-top: 20px;
+}
+#year_select {
+  padding: 5px;
+  width: 200px;
+}
+
+.supervise {
+  width: 100%;
+  font-size: 15px;
+  font-family: inherit;
+  color: #000000;
+  text-align: center;
+  padding: 28px;
+  border-bottom: 1px dotted #000;
+}
+
+.team-details h3 {
+  cursor: pointer;
+  color: #4b16a7;
+}
+
+.team-details ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.team-details li {
+  margin-bottom: 15px;
+  margin-left: 5px;
+}
+
+.team-details h3 {
+  font-weight: bold;
+  font-size: 20px;
+  color: #4b16a7;
+}
+
+.team-details p {
+  font-size: 12px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.right_col title {
+  font-weight: bold;
+  font-size: 20px;
+  color: #4b16a7;
+}
+
+.no-documents-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+@keyframes savedAnimation {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.saved-animation {
+  animation: savedAnimation 0.5s ease-in-out;
+}

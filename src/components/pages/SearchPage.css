@@ -1,0 +1,248 @@
+.logo-container {
+  margin-right: 15px;
+  margin-left: 15px;
+}
+.search-results-container {
+  margin-top: 30px;
+  margin-bottom: 20px;
+  width: 95%;
+}
+
+.searchpage-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.content-container {
+  display: flex;
+  justify-content: center;
+}
+
+.options-container {
+  width: 20%;
+  margin-right: 20px;
+  margin-top: 20px;
+}
+
+.books {
+  width: 95%;
+}
+#supervisor-select {
+  padding: 5px;
+  width: 200px;
+}
+#year-select {
+  padding: 5px;
+  width: 200px;
+}
+.option label {
+  color: rgb(183, 23, 23);
+}
+
+.option I.fa.fa-bookmark::before {
+  margin-right: 5px;
+}
+
+.searchlogo {
+  padding-top: 20px;
+  font-size: 26px;
+  color: #1eb2a6;
+  font-weight: 800;
+  text-shadow: -0.5px -0.5px 0 #000, 0.5px -0.5px 0 #000, -0.5px 0.5px 0 #000,
+    0.5px 0.5px 0 #000; /* Adjust the font size as per your needs */
+}
+.logo-container span {
+  font-style: italic;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  font-weight: bold;
+  color: #232323;
+}
+.logo-container::after {
+  content: "";
+  display: block;
+  border-top: 1px dotted #000000;
+  margin: 15px 0;
+  width: calc(
+    100vw - 0px
+  ); /* Subtracting 40px for the logo container's left and right margins */
+  position: absolute;
+  left: 0;
+}
+
+.result-info {
+  display: flex;
+  flex-direction: column;
+}
+.option {
+  margin-left: 2rem;
+  padding-top: 2rem;
+}
+
+.book-card {
+  margin-left: 30px;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 20px;
+}
+
+.title {
+  font-weight: bold;
+  font-size: 20px;
+  color: #4b16a7;
+}
+
+.truncate-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3; /* Adjust the number of lines as needed */
+  display: -webkit-box;
+  -webkit-box-pack: center;
+  -webkit-box-align: start;
+  font-size: 12px;
+  max-width: 95%;
+  padding: 0;
+}
+
+.searchpage_searchbar {
+  display: flex;
+  align-items: center;
+  background-color: transparent;
+  border-radius: 5px;
+  justify-content: center;
+  margin-left: 2rem;
+  margin-top: 2rem;
+  width: 200px;
+}
+.searchpage_searchbar input {
+  border: 2px solid black;
+  border-color: #4b16a7;
+}
+
+.search-button {
+  margin-top: 0px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  padding: 0.25rem;
+}
+
+.search-button i {
+  font-size: 20px;
+  color: #777;
+  transition: color 0.3s;
+  margin-left: -3rem;
+  padding-right: 0.75rem;
+  padding-top: 0.22rem;
+  padding-bottom: 0.22rem;
+}
+
+.search-button:hover i {
+  color: #1eb2a6;
+  background-color: white;
+}
+.searchpage_searchbar input {
+  font-size: 15px;
+  border-radius: 5px;
+  width: 300px;
+}
+
+.search-results-container2 {
+  margin-left: 100px;
+}
+.details {
+  display: flex;
+  color: #018703;
+  gap: 4px;
+}
+.details p {
+  font-size: 14px;
+}
+
+@keyframes savedAnimation {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.saved-animation {
+  animation: savedAnimation 0.5s ease-in-out;
+}
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal.open {
+  display: flex;
+}
+
+.modal-content {
+  position: relative;
+  background-color: #fffffe;
+  padding: 20px;
+  border-radius: 4px;
+  max-width: 500px;
+  width: 80%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.modal-close {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font-size: 24px;
+  color: #aaa;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  padding: 0;
+}
+
+.modal-close:hover {
+  color: #777;
+}
+
+.modal-close::before,
+.modal-close::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 2px;
+  background-color: #aaa;
+  transform: translate(-50%, -50%);
+}
+
+.modal-close::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.modal-close::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.ReactModal__Content {
+  max-width: 800px;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+}

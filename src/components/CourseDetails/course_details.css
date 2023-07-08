@@ -1,0 +1,41 @@
+.course-details {
+  max-width: 80%;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.course-details h1 {
+  font-size: 24px;
+  color: #1eb2a6;
+  margin-bottom: 15px;
+  text-align: center;
+  padding-bottom: 10px;
+  border-bottom: 1px dotted #000;
+}
+.course-details h3 {
+  cursor: pointer;
+  color: #4b16a7;
+}
+
+.course-details ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.course-details li {
+  margin-bottom: 15px;
+}
+
+.course-details h3 {
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+
+.course-details p {
+  font-size: 12px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

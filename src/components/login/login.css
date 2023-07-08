@@ -1,0 +1,89 @@
+.login-signup-body {
+  background-image: url("../../../public/images/background.png");
+  background-size: 100% 100%;
+}
+
+.auth-form-container {
+  color: whitesmoke;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.auth-form-container h2 {
+  margin-top: -10px;
+  padding-top: 15px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 20%;
+}
+
+label {
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+.login-form input {
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.login-button {
+  background-color: #6b5b95;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.link-btn {
+  background-color: rgba(255, 255, 255, 0);
+  padding: 10px;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.link-btn a {
+  color: whitesmoke;
+  text-decoration: none;
+}
+
+.link-btn a:hover {
+  text-decoration: none;
+  color: red;
+}
+
+@media (max-width: 500px) {
+  .auth-form-container {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 400px) {
+  .auth-form-container {
+    max-width: 500px;
+  }
+
+  h2 {
+    font-size: 24px;
+  }
+
+  input {
+    margin-bottom: 16px;
+  }
+
+  .login-button {
+    font-size: 14px;
+  }
+}

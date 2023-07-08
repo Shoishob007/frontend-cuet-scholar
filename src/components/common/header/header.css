@@ -1,0 +1,160 @@
+/*--------head------------*/
+.head {
+  padding: 10px 0;
+  color: #1eb2a6;
+}
+.link-style {
+  color: #1eb2a6; /* Set the desired link color */
+  /* Add more CSS properties as needed */
+}
+
+.social {
+  color: #000;
+}
+.logo h1 {
+  font-size: 30px;
+  color: #1eb2a6;
+  font-weight: 900;
+  text-shadow: -0.5px -0.5px 0 #000, 0.5px -0.5px 0 #000, -0.5px 0.5px 0 #000,
+    0.5px 0.5px 0 #000;
+}
+.logo span {
+  font-size: 16px;
+  font-weight: 900;
+  text-decoration: solid;
+}
+.head .icon {
+  margin-left: 10px;
+}
+/*--------head------------*/
+/*--------header------------*/
+header {
+  background-color: rgba(41, 39, 39, 0.6);
+  margin: 0 30px;
+}
+header .nav {
+  display: flex !important;
+}
+header li {
+  margin-right: 40px;
+}
+header ul {
+  padding: 30px 20px;
+}
+header .header-link {
+  margin-left: -25px;
+}
+header ul li a {
+  color: #ffffff;
+  font-weight: 500;
+  transition: 0.5s;
+}
+header ul li a:hover {
+  color: #1eb2a6;
+}
+.header-link {
+  display: inline-block;
+  margin-right: 0px;
+  color: #ffffff;
+  text-decoration: none;
+  background-color: #ffffff00;
+  margin-top: -20px;
+  font-size: 14.4px;
+}
+
+.header-link:hover {
+  background-color: #ffffff00;
+  color: #1eb2a6;
+}
+.logout-button {
+  display: inline-block;
+  margin-right: 10px;
+  color: #ffffff;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.start {
+  background-color: #1eb2a6;
+  padding: 20px;
+  color: #ffffff;
+}
+.searchbar {
+  display: flex;
+  align-items: center;
+}
+/* .container {
+  display: flex;
+  justify-content: space-between;
+} */
+
+.input-container {
+  display: flex;
+  margin-right: 50px;
+  align-items: center;
+  background-color: #ffffff;
+  border-radius: 4px;
+  height: 35px;
+  padding-left: 10px;
+}
+.input-container input[type="text"] {
+  padding: 10px;
+  border: none;
+  outline: none;
+  background-color: white;
+}
+
+.submit {
+  height: 30px;
+  padding: 10px;
+  border: none;
+  outline: none;
+  background-color: transparent;
+  cursor: pointer;
+  margin-top: -22px;
+  margin-right: -5px;
+}
+.start i {
+  padding: 10px;
+  color: #010202;
+  background-color: #ffffff;
+}
+.toggle {
+  display: none;
+}
+/*--------header------------*/
+@media screen and (max-width: 768px) {
+  .start {
+    clip-path: none;
+  }
+  header {
+    margin: 0;
+    background-color: #1eb2a6;
+    position: relative;
+  }
+  header ul.flexSB {
+    display: none;
+  }
+  header ul li {
+    margin-bottom: 20px;
+  }
+  .toggle {
+    display: block;
+    background: none;
+    color: #fff;
+    font-size: 30px;
+    position: absolute;
+    right: 0;
+    top: -20px;
+  }
+  .mobile-nav {
+    position: absolute;
+    top: 7vh;
+    left: 0;
+    width: 100%;
+    background-color: #1eb2a6;
+  }
+}
