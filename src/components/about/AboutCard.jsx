@@ -1,18 +1,55 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 import Heading from "../common/heading/Heading";
 import "./about.css";
 import { homeAbout } from "../../dummydata";
 
 const AboutCard = () => {
+  const sectionRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+          } else {
+            entry.target.classList.remove("visible");
+          }
+        });
+      },
+      {
+        threshold: 0.5,
+      }
+    );
+
+    const section = sectionRef.current;
+    observer.observe(section);
+
+    return () => {
+      observer.unobserve(section);
+    };
+  }, []);
+
   return (
     <>
-      <section className="aboutHome">
+      <section className="aboutHome" ref={sectionRef}>
         <div className="container flexSB">
-          <div className="left_row">
+          <motion.div
+            className="left_row"
+            initial={{ opacity: 0, x: -100 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1, delay: 0.5 }}
+          >
             <img src="./images/aboutcard1.jpg" alt="" />
-          </div>
-          <div className="right_row">
+          </motion.div>
+          <motion.div
+            className="right_row"
+            initial={{ opacity: 0, x: 100 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1, delay: 0.5 }}
+          >
             <Heading
               subtitle="LEARN EVERYTHING"
               title="Benefits About Our Online Research Platform"
@@ -32,7 +69,7 @@ const AboutCard = () => {
                 </Link>
               ))}
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
     </>

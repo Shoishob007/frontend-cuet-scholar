@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import "./courses.css";
 import { online } from "../../dummydata";
 import Heading from "../common/heading/Heading";
+import CountUp from "react-countup";
 
 const OnlineCourses = () => {
   return (
@@ -22,7 +23,7 @@ const OnlineCourses = () => {
                     <img src={val.hoverCover} alt="" className="show" />
                   </div>
                   <h1>{val.courseName}</h1>
-                  <span>{val.course}</span>
+                  <span><CountUp end={val.course} duration={5}/>papers</span>
                 </div>
               </Link>
             ))}

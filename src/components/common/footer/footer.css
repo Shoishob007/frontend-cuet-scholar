@@ -117,3 +117,20 @@ footer .last i {
 .legal i {
   color: #1eb2a6;
 }
+.scroll-to-top {
+  transition: all .3s linear;
+  position: fixed;
+  bottom: 5%;
+  right: 5%;
+  z-index: 9;
+  width: 40px;
+  height: 40px;
+  /* line-height: 40px; */
+  text-align: center;
+  border-radius: 5px;
+  color: #344054
+}
+
+.scroll-to-top--home1 {
+  background-color: #B1FDAF !important;
+}
