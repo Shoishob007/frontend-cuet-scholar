@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 import { FaSave, FaRegSave } from "react-icons/fa";
 import { useParams, Link } from "react-router-dom";
+import ScrollToTop from "react-scroll-to-top";
 import {
   collection,
   query,
@@ -16,6 +17,7 @@ import SavedPapers from "../SavedPapers/SavedPapers";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useUser } from "./../../UserContext";
 import "./course_details.css";
+import Header from "../common/header/Header";
 
 const CourseDetails = () => {
   const { courseName } = useParams();
@@ -167,7 +169,9 @@ const CourseDetails = () => {
   };
 
   return (
+    <><Header />
     <div className="all">
+
       <div className="supervise">
         <h2>Thesis works in {courseName} category</h2>
       </div>
@@ -287,9 +291,7 @@ const CourseDetails = () => {
                         (savedDoc) => savedDoc._id === doc._id
                       ) ? (
                         <Link
-                          className={`save-button ${
-                            doc.isSavedAnimation ? "saved-animation" : ""
-                          }`}
+                          className={`save-button ${doc.isSavedAnimation ? "saved-animation" : ""}`}
                           onClick={(e) => handleRemoveDocument(e, doc._id)}
                         >
                           <FaSave />
@@ -331,7 +333,15 @@ const CourseDetails = () => {
           </Modal>
         </div>
       </div>
-    </div>
+      <ScrollToTop
+        smooth
+        height="16px"
+        width="14px"
+        className="scroll-to-top scroll-to-top--home1"
+        viewBox="0 0 448 512"
+        svgPath="M246.6 9.4c-12.5-12.5-32.8-12.5-45.3 0l-128 128c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 109.3V320c0 17.7 14.3 32 32 32s32-14.3 32-32V109.3l73.4 73.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-128-128zM64 352c0-17.7-14.3-32-32-32s-32 14.3-32 32v64c0 53 43 96 96 96H352c53 0 96-43 96-96V352c0-17.7-14.3-32-32-32s-32 14.3-32 32v64c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V352z"
+      />
+    </div></>
   );
 };
 
