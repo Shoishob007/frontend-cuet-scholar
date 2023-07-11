@@ -1,76 +1,76 @@
 .coursesCard {
-	padding: 50px 0;
+  padding: 50px 0;
 }
 
 .coursesCard .items {
-	background-color: #fff;
-	padding: 30px;
-	text-align: center;
+  background-color: #fff;
+  padding: 30px;
+  text-align: center;
 }
 
 .coursesCard .img {
-	width: 80px;
-	height: 80px;
-	border-radius: 50%;
-	background-color: #1eb2a6;
-	padding: 15px;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: #1eb2a6;
+  padding: 15px;
 }
 
 .coursesCard img {
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .coursesCard .text {
-	margin-left: 15px;
-	text-align: left;
+  margin-left: 15px;
+  text-align: left;
 }
 
 .coursesCard .text h1 {
-	font-size: 30px;
-	font-weight: 500;
-	line-height: 45px;
+  font-size: 30px;
+  font-weight: 500;
+  line-height: 45px;
 }
 
 .coursesCard .rate {
-	margin: 20px 0;
-	color: #1eb2a6;
+  margin: 20px 0;
+  color: #1eb2a6;
 }
 
 .coursesCard .rate i {
-	font-size: 13px;
-	margin-right: 5px;
+  font-size: 13px;
+  margin-right: 5px;
 }
 
 .coursesCard .details .dimg img {
-	width: 50px;
-	height: 50px;
-	border-radius: 50%;
-	margin-right: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 20px;
 }
 
 .coursesCard .details .box {
-	display: flex;
-	align-items: center;
-	color: grey;
+  display: flex;
+  align-items: center;
+  color: grey;
 }
 
 .coursesCard .details span {
-	color: #1eb2a6;
-	font-weight: 500;
-	font-size: 14px;
+  color: #1eb2a6;
+  font-weight: 500;
+  font-size: 14px;
 }
 
 .coursesCard .price {
-	margin: 30px 0;
-	background-color: #f8f8f8;
-	padding: 10px;
+  margin: 30px 0;
+  background-color: #f8f8f8;
+  padding: 10px;
 }
 
 .coursesCard h3 {
-	font-weight: 500;
-	color: #1eb2a6;
+  font-weight: 500;
+  color: #1eb2a6;
 }
 
 /*-------------online---------*/
@@ -78,112 +78,112 @@
 .online {
   text-align: center;
   padding-bottom: 80px;
-	text-align: center;
-	padding-bottom: 100px;
-	padding-top: 20px;
+  text-align: center;
+  padding-bottom: 100px;
+  padding-top: 20px;
 }
 
 .online.animate .box1 {
-	opacity: 1;
-	transform: translateY(0);
-	transition-delay: 0.3s;
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.3s;
 }
 
 .online .box1 {
-	box-shadow: 0 5px 25px -2px rgb(0 0 0 / 6%);
-	background-color: #fff;
-	padding: 30px 20px;
-	opacity: 0;
-	transform: translateY(50px);
-	transition: opacity 0.5s, transform 0.5s;
+  box-shadow: 0 5px 25px -2px rgb(0 0 0 / 6%);
+  background-color: #fff;
+  padding: 30px 20px;
+  opacity: 0;
+  transform: translateY(50px);
+  transition: opacity 0.5s, transform 0.5s;
 }
 
 .online .img {
-	width: 80px;
-	height: 80px;
-	margin: auto;
-	position: relative;
+  width: 80px;
+  height: 80px;
+  margin: auto;
+  position: relative;
 }
 
 .online img {
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .online h1 {
-	font-weight: 500;
-	font-size: 20px;
-	margin: 20px 0;
-	line-height: 30px;
+  font-weight: 500;
+  font-size: 20px;
+  margin: 20px 0;
+  line-height: 30px;
 }
 
 .online span {
-	background-color: #f8f8f8;
-	padding: 5px 20px;
-	font-weight: 500;
-	font-size: 15px;
-	color: #1eb2a6;
-	border-radius: 5px;
+  background-color: #f8f8f8;
+  padding: 5px 20px;
+  font-weight: 500;
+  font-size: 15px;
+  color: #1eb2a6;
+  border-radius: 5px;
 }
 
 .online .box1:hover {
-	background-color: #1eb2a6;
-	border-radius: 5px;
-	cursor: pointer;
+  background-color: #1eb2a6;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 .online .box1:hover .show {
-	opacity: 1;
-	position: absolute;
-	top: 0;
-	left: 0;
+  opacity: 1;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .online .box1 .show {
-	opacity: 0;
+  opacity: 0;
 }
 
 .online .box1:hover h1 {
-	color: #fff;
+  color: #fff;
 }
 
 /* Animation */
 
 .grid3 {
-	display: grid;
-	grid-template-columns: repeat(6, 1fr);
-	grid-gap: 10px;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-gap: 10px;
 }
 
 .rowFadeInLeft {
-	animation: rowFadeInLeft 0.5s ease-in-out forwards;
+  animation: rowFadeInLeft 0.5s ease-in-out forwards;
 }
 
 .rowFadeInRight {
-	animation: rowFadeInRight 0.5s ease-in-out forwards;
+  animation: rowFadeInRight 0.5s ease-in-out forwards;
 }
 
 @keyframes rowFadeInLeft {
-	from {
-		opacity: 0;
-		transform: translateX(-50px);
-	}
-	to {
-		opacity: 1;
-		transform: translateX(0);
-	}
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 @keyframes rowFadeInRight {
-	from {
-		opacity: 0;
-		transform: translateX(50px);
-	}
-	to {
-		opacity: 1;
-		transform: translateX(0);
-	}
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 /*-------------online---------*/
@@ -192,9 +192,50 @@
 }
 
 .content h1 {
-	color: #1eb2a6;
+  color: #1eb2a6;
 }
 
 .box1 {
-	height: 260px;
+  height: 260px;
+}
+.course-details {
+  max-width: 80%;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.course-details h1 {
+  font-size: 24px;
+  color: #1eb2a6;
+  margin-bottom: 15px;
+  text-align: center;
+  padding-bottom: 10px;
+  border-bottom: 1px dotted #000;
+}
+.course-details h3 {
+  cursor: pointer;
+  color: #4b16a7;
+}
+
+.course-details ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.course-details li {
+  margin-bottom: 15px;
+}
+
+.course-details h3 {
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+
+.course-details p {
+  font-size: 12px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
