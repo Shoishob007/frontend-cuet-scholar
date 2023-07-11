@@ -37,13 +37,6 @@ const Login = (props) => {
       const auth = getAuth(app); // Getting the Auth object from Firebase
       await setPersistence(auth, browserSessionPersistence); // Enable session persistence
 
-      if (loginAsAdmin) {
-        if (adminKey !== "1020304050") {
-          alert("Admin key is incorrect");
-          return;
-        }
-      }
-
       const userCredential = await signInWithEmailAndPassword(
         auth,
         email,
@@ -54,16 +47,23 @@ const Login = (props) => {
       // Check if the user is an admin
       const firestore = getFirestore();
       const adminRef = collection(firestore, "admins");
-      const q = query(adminRef, where("userId", "==", user.uid));
+      const q = query(adminRef, where("email", "==", user.email));
       const querySnapshot = await getDocs(q);
 
-      if (querySnapshot && loginAsAdmin) {
-        history.push("/dbm");
-      } else if (userCredential && !loginAsAdmin) {
+      if (loginAsAdmin) {
+        if (!querySnapshot.empty) {
+          // User is an admin
+          history.push("/dbm");
+          alert("Logged in as admin successfully");
+        } else {
+          // No such admin
+          alert("No such admins");
+        }
+      } else {
+        // User is not an admin
         history.push("/");
+        alert("Logged in successfully");
       }
-
-      alert("Logged in successfully");
     } catch (error) {
       alert(error.message);
     }

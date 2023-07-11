@@ -22,10 +22,12 @@ const TeamDetails = () => {
   const [documents, setDocuments] = useState([]);
   const [selectedYear, setSelectedYear] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [savedDocuments, setSavedDocuments] = useState([]);
   const [deletedDocumentIds, setDeletedDocumentIds] = useState([]);
   const { user, setUser } = useUser();
-
+  const documentsPerPage = 5;
   const searchFirestore = async (year) => {
     try {
       const booksRef = collection(db, "Thesis");
@@ -140,7 +142,26 @@ const TeamDetails = () => {
   const openDocumentInNewWindow = (document) => {
     window.open(document.url, "_blank");
   };
+  useEffect(() => {
+    const calculateTotalPages = () => {
+      const totalDocs = documents.length;
+      const totalPagesCount = Math.ceil(totalDocs / documentsPerPage);
+      setTotalPages(totalPagesCount);
+    };
 
+    calculateTotalPages();
+  }, [documents]);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const indexOfLastDocument = currentPage * documentsPerPage;
+  const indexOfFirstDocument = indexOfLastDocument - documentsPerPage;
+  const currentDocuments = documents.slice(
+    indexOfFirstDocument,
+    indexOfLastDocument
+  );
   return (
     <div className="all">
       <div className="supervise">
@@ -172,9 +193,9 @@ const TeamDetails = () => {
           </div>
         </div>
         <div className="right_col">
-          {documents.length > 0 ? (
+          {currentDocuments.length > 0 ? (
             <ul>
-              {documents.map((doc, i) => (
+              {currentDocuments.map((doc, i) => (
                 <li key={i}>
                   <h3 onClick={() => openDocumentInNewWindow(doc)}>
                     {doc.title}
@@ -191,9 +212,8 @@ const TeamDetails = () => {
                         (savedDoc) => savedDoc._id === doc._id
                       ) ? (
                         <Link
-                          className={`save-button ${
-                            doc.isSavedAnimation ? "saved-animation" : ""
-                          }`}
+                          className={`save-button ${doc.isSavedAnimation ? "saved-animation" : ""
+                            }`}
                           onClick={(e) => handleRemoveDocument(e, doc._id)}
                         >
                           <FaSave />
@@ -214,6 +234,36 @@ const TeamDetails = () => {
           ) : (
             <div className="no-documents-message">
               <p>No documents found.</p>
+            </div>
+          )}
+          {totalPages > 1 && (
+            <div className="pagination">
+              <button
+                className={currentPage === 1 ? "disabled" : ""}
+                onClick={() => handlePageChange(currentPage - 1)}
+              >
+                Prev
+              </button>
+              <div className="page-numbers">
+                {Array.from(
+                  { length: totalPages },
+                  (_, index) => index + 1
+                ).map((pageNumber) => (
+                  <button
+                    key={pageNumber}
+                    className={pageNumber === currentPage ? "active" : ""}
+                    onClick={() => handlePageChange(pageNumber)}
+                  >
+                    {pageNumber}
+                  </button>
+                ))}
+              </div>
+              <button
+                className={currentPage === totalPages ? "disabled" : ""}
+                onClick={() => handlePageChange(currentPage + 1)}
+              >
+                Next
+              </button>
             </div>
           )}
         </div>
