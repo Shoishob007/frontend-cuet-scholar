@@ -3,13 +3,13 @@ import { useHistory, useLocation, Link } from "react-router-dom";
 import Modal from "react-modal";
 import { FaSave, FaRegSave } from "react-icons/fa";
 import {
-  collection,
-  getDocs,
-  addDoc,
-  query,
-  where,
-  deleteDoc,
-  doc,
+	collection,
+	getDocs,
+	addDoc,
+	query,
+	where,
+	deleteDoc,
+	doc,
 } from "firebase/firestore";
 import { db } from "../../firebase";
 import SavedPapers from "../SavedPapers/SavedPapers";
@@ -18,9 +18,9 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import "./SearchPage.css";
 
 const SearchResults = () => {
-  const location = useLocation();
-  const history = useHistory();
-  const { user, setUser } = useUser();
+	const location = useLocation();
+	const history = useHistory();
+	const { user, setUser } = useUser();
 
   const searchParams = new URLSearchParams(location.search);
   const initialKeyword = searchParams.get("keyword");
@@ -31,25 +31,22 @@ const SearchResults = () => {
   const [savedDocuments, setSavedDocuments] = useState([]);
   const [deletedDocumentIds, setDeletedDocumentIds] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const resultsPerPage = 8;
 
-  const searchFirestore = async (searchKey, year, supervisor) => {
-    try {
-      const booksRef = collection(db, "Thesis");
-      let q = query(booksRef);
+	const searchFirestore = async (searchKey, year, supervisor) => {
+		try {
+			const booksRef = collection(db, "Thesis");
+			let q = query(booksRef);
 
-      if (year) {
-        q = query(q, where("year", "==", parseInt(year)));
-      }
+			if (year) {
+				q = query(q, where("year", "==", parseInt(year)));
+			}
 
-      if (supervisor) {
-        q = query(q, where("supervisor", "==", supervisor));
-      }
+			if (supervisor) {
+				q = query(q, where("supervisor", "==", supervisor));
+			}
 
       const querySnapshot = await getDocs(q);
-      const books = [];
+      let books = [];
       querySnapshot.forEach((doc) => {
         const { title, summary, category, supervisor } = doc.data();
         if (
@@ -61,62 +58,28 @@ const SearchResults = () => {
           (category && category.toLowerCase() === searchKey.toLowerCase())
         ) {
           const regex = new RegExp(searchKey, "gi");
+
           const highlightedSummary = summary?.replace(
             regex,
             (match) => `<strong>${match}</strong>`
           );
+
           books.push({ ...doc.data(), highlightedSummary });
         }
       });
-
-      const totalResults = books.length;
-      setTotalPages(Math.ceil(totalResults / resultsPerPage));
       setSearchResults(books);
     } catch (error) {
       console.error(error);
     }
   };
 
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
+  const saveSearchStateToSessionStorage = () => {
+    sessionStorage.setItem("searchKeyword", searchKeyword);
+    sessionStorage.setItem("selectedYear", selectedYear);
+    sessionStorage.setItem("selectedSupervisor", selectedSupervisor);
   };
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    if (searchKeyword) {
-      sessionStorage.setItem("searchKeyword", searchKeyword);
-      history.push(`/search-results?keyword=${searchKeyword}`);
-      searchFirestore(searchKeyword, selectedYear, selectedSupervisor);
-    }
-  };
-
-  const handleYearChange = (e) => {
-    const year = e.target.value;
-    setSelectedYear(year);
-    searchFirestore(searchKeyword, year, selectedSupervisor);
-  };
-
-  const handleSupervisorChange = (e) => {
-    const supervisor = e.target.value;
-    setSelectedSupervisor(supervisor);
-    searchFirestore(searchKeyword, selectedYear, supervisor);
-  };
-
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
-
-  useEffect(() => {
-    if (initialKeyword) {
-      searchFirestore(initialKeyword, selectedYear, selectedSupervisor);
-    }
-  }, [initialKeyword, selectedYear, selectedSupervisor]);
-
-  useEffect(() => {
+  const retrieveSearchStateFromSessionStorage = () => {
     const storedSearchKeyword = sessionStorage.getItem("searchKeyword");
     const storedSelectedYear = sessionStorage.getItem("selectedYear");
     const storedSelectedSupervisor =
@@ -125,100 +88,136 @@ const SearchResults = () => {
     setSearchKeyword(storedSearchKeyword || "");
     setSelectedYear(storedSelectedYear || "");
     setSelectedSupervisor(storedSelectedSupervisor || "");
-  }, []);
+  };
+
+	const handleSearch = (e) => {
+		e.preventDefault();
+		if (searchKeyword) {
+			sessionStorage.setItem("searchKeyword", searchKeyword);
+			history.push(`/search-results?keyword=${searchKeyword}`);
+			searchFirestore(searchKeyword, selectedYear, selectedSupervisor);
+		}
+	};
+
+	const handleYearChange = (e) => {
+		const year = e.target.value;
+		setSelectedYear(year);
+		searchFirestore(searchKeyword, year, selectedSupervisor);
+	};
+
+	const handleSupervisorChange = (e) => {
+		const supervisor = e.target.value;
+		setSelectedSupervisor(supervisor);
+		searchFirestore(searchKeyword, selectedYear, supervisor);
+	};
+
+	const openModal = () => {
+		setIsModalOpen(true);
+	};
+
+	const closeModal = () => {
+		setIsModalOpen(false);
+	};
+
+	useEffect(() => {
+		if (initialKeyword) {
+			searchFirestore(initialKeyword, selectedYear, selectedSupervisor);
+		}
+	}, [initialKeyword, selectedYear, selectedSupervisor]);
 
   useEffect(() => {
-    const auth = getAuth();
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
-    });
+    saveSearchStateToSessionStorage();
+  }, [searchKeyword, selectedYear, selectedSupervisor]);
 
-    return () => unsubscribe(); // Cleanup the listener on unmount
+	useEffect(() => {
+		const auth = getAuth();
+		const unsubscribe = onAuthStateChanged(auth, (user) => {
+			setUser(user);
+		});
+
+    return () => unsubscribe(); // Cleaningup the listener on unmount
   }, [setUser]);
 
-  const fetchSavedDocuments = useCallback(async () => {
-    try {
-      if (user) {
-        const savedDocsQuery = query(
-          collection(db, "savedDocuments"),
-          where("userId", "==", user.uid)
-        );
-        const querySnapshot = await getDocs(savedDocsQuery);
+	const fetchSavedDocuments = useCallback(async () => {
+		try {
+			if (user) {
+				const savedDocsQuery = query(
+					collection(db, "savedDocuments"),
+					where("userId", "==", user.uid)
+				);
+				const querySnapshot = await getDocs(savedDocsQuery);
 
-        const savedDocuments = [];
-        querySnapshot.forEach((doc) => {
-          savedDocuments.push({ _id: doc.id, ...doc.data() });
-        });
+				const savedDocuments = [];
+				querySnapshot.forEach((doc) => {
+					savedDocuments.push({ _id: doc.id, ...doc.data() });
+				});
 
-        setSavedDocuments(savedDocuments);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }, [user]);
+				setSavedDocuments(savedDocuments);
+			}
+		} catch (error) {
+			console.error(error);
+		}
+	}, [user]);
 
-  useEffect(() => {
-    fetchSavedDocuments();
-  }, [fetchSavedDocuments]);
+	useEffect(() => {
+		fetchSavedDocuments();
+	}, [fetchSavedDocuments]);
 
-  const handleSaveResult = async (result) => {
-    try {
-      if (!user) {
-        alert("Please log in to save the document.");
-        return;
-      }
+	const handleSaveResult = async (result) => {
+		try {
+			if (!user) {
+				alert("Please log in to save the document.");
+				return;
+			}
 
-      const isDocumentSaved = savedDocuments.some(
-        (doc) => doc._id === result._id
-      );
+			const isDocumentSaved = savedDocuments.some(
+				(doc) => doc._id === result._id
+			);
 
-      if (isDocumentSaved) {
-        const documentId = savedDocuments.find(
-          (doc) => doc._id === result._id
-        )._id;
-        await handleRemoveDocument(documentId);
-      } else {
-        const docRef = await addDoc(collection(db, "savedDocuments"), {
-          userId: user.uid,
-          ...result,
-        });
+			if (isDocumentSaved) {
+				const documentId = savedDocuments.find(
+					(doc) => doc._id === result._id
+				)._id;
+				await handleRemoveDocument(documentId);
+			} else {
+				const docRef = await addDoc(collection(db, "savedDocuments"), {
+					userId: user.uid,
+					...result,
+				});
 
-        const savedDocument = {
-          _id: docRef.id,
-          userId: user.uid,
-          ...result,
-          isSavedAnimation: true,
-        };
-        setSavedDocuments((prevDocuments) => [...prevDocuments, savedDocument]);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
+				const savedDocument = {
+					_id: docRef.id,
+					userId: user.uid,
+					...result,
+					isSavedAnimation: true,
+				};
+				setSavedDocuments((prevDocuments) => [...prevDocuments, savedDocument]);
+			}
+		} catch (error) {
+			console.error(error);
+		}
+	};
 
-  const handleRemoveDocument = async (event, documentId) => {
-    event.preventDefault();
-    try {
-      await deleteDoc(doc(db, "savedDocuments", documentId));
+	const handleRemoveDocument = async (event, documentId) => {
+		event.preventDefault();
+		try {
+			await deleteDoc(doc(db, "savedDocuments", documentId));
 
-      setDeletedDocumentIds((prevIds) => [...prevIds, documentId]);
+			setDeletedDocumentIds((prevIds) => [...prevIds, documentId]);
 
-      setSavedDocuments((prevDocuments) =>
-        prevDocuments.map((doc) =>
-          doc._id === documentId ? { ...doc, isSavedAnimation: false } : doc
-        )
-      );
+			setSavedDocuments((prevDocuments) =>
+				prevDocuments.map((doc) =>
+					doc._id === documentId ? { ...doc, isSavedAnimation: false } : doc
+				)
+			);
 
-      console.log("Successfully removed");
-    } catch (error) {
-      console.error(error);
-    }
-  };
+			console.log("Successfully removed");
+		} catch (error) {
+			console.error(error);
+		}
+	};
 
-  const displayedResults = searchResults.slice(
-    (currentPage - 1) * resultsPerPage,
-    currentPage * resultsPerPage
-  );
+  console.log("Logged-in User UID:", user ? user.uid : "No user logged in");
 
   return (
     <div className="searchpage-container">
@@ -237,10 +236,12 @@ const SearchResults = () => {
               onChange={(e) => setSearchKeyword(e.target.value)}
               placeholder="Search..."
             />
+
             <button type="submit" className="search-button">
               <i className="fa fa-search"></i>
             </button>
           </form>
+          {/* Year filter */}
           <div className="option">
             <label htmlFor="year-select">Year:</label>
             <select
@@ -258,6 +259,7 @@ const SearchResults = () => {
               )}
             </select>
           </div>
+
           <div className="option">
             <label htmlFor="supervisor-select">Supervisor:</label>
             <select
@@ -266,7 +268,7 @@ const SearchResults = () => {
               onChange={handleSupervisorChange}
             >
               <option value="">All Supervisors</option>
-              <option value="Dr. A.H.M. Ashfak Habib">
+              <option value="Dr. Abu Hasnat Mohammad Ashfak Habib">
                 Dr. Abu Hasnat Mohammad Ashfak Habib
               </option>
               <option value="Dr. Kaushik Deb">Dr. Kaushik Deb</option>
@@ -286,11 +288,13 @@ const SearchResults = () => {
               <option value="Muhammad Kamal Hossen">
                 Muhammad Kamal Hossen
               </option>
-              <option value="Obaidur Rahman">Mohammad Obaidur Rahman</option>
+              <option value="Mohammad Obaidur Rahman">
+                Mohammad Obaidur Rahman
+              </option>
               <option value="Dr. Pranab Kumar Dhar">
                 Dr. Pranab Kumar Dhar
               </option>
-              <option value="Mir Md. Saki Kowsar">Mir. Md. Saki Kowsar</option>
+              <option value="Mir. Md. Saki Kowsar">Mir. Md. Saki Kowsar</option>
               <option value="Dr. Md. Iqbal Hasan Sarker">
                 Dr. Md. Iqbal Hasan Sarker
               </option>
@@ -323,9 +327,7 @@ const SearchResults = () => {
               <option value="Avishek Das">Avishek Das</option>
               <option value="Moumita Sen Sarma">Moumita Sen Sarma</option>
               <option value="Saadman Sakib">Saadman Sakib</option>
-              <option value="Shuhena Salam Aonty">
-                Shuhena Salam Aonty
-              </option>{" "}
+              <option value="Shuhena Salam Aonty">Shuhena Salam Aonty</option>
             </select>
           </div>
           <div className="option">
@@ -335,9 +337,9 @@ const SearchResults = () => {
           </div>
         </div>
         <div className="search-results-container">
-          {displayedResults.length > 0 ? (
+          {searchResults.length > 0 ? (
             <ul className="books">
-              {displayedResults.map((result, index) => (
+              {searchResults.map((result, index) => (
                 <li key={index} className="book-card">
                   <div className="metadata">
                     <div className="result-info">
@@ -420,35 +422,6 @@ const SearchResults = () => {
           </Modal>
         </div>
       </div>
-      {totalPages > 1 && (
-        <div className="pagination">
-          <button
-            className={currentPage === 1 ? "disabled" : ""}
-            onClick={() => handlePageChange(currentPage - 1)}
-          >
-            Prev
-          </button>
-          <div className="page-numbers">
-            {Array.from({ length: totalPages }, (_, index) => index + 1).map(
-              (pageNumber) => (
-                <button
-                  key={pageNumber}
-                  className={pageNumber === currentPage ? "active" : ""}
-                  onClick={() => handlePageChange(pageNumber)}
-                >
-                  {pageNumber}
-                </button>
-              )
-            )}
-          </div>
-          <button
-            className={currentPage === totalPages ? "disabled" : ""}
-            onClick={() => handlePageChange(currentPage + 1)}
-          >
-            Next
-          </button>
-        </div>
-      )}
     </div>
   );
 };

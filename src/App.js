@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import Header from "./components/common/header/Header";
 import Footer from "./components/common/footer/Footer";
@@ -16,12 +16,27 @@ import CourseDetails from "./components/CourseDetails/CourseDetails";
 import TeamDetails from "./components/TeamDetails/TeamDetails";
 import DocumentList from "./components/about/DocumentList";
 import SavedPapers from "./components/SavedPapers/SavedPapers";
+import Loader from "./components/preloader/Preloader";
 import { UserProvider } from "./UserContext"; // Import the UserProvider
 
 const App = () => {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulating a delay for demonstration purposes
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, []);
+
   return (
     <UserProvider>
       {" "}
+      {loading && <Loader />}
       {/* Wrap the entire application with UserProvider */}
       <Router>
         <Switch>
