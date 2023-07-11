@@ -26,9 +26,12 @@ const CourseDetails = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [savedDocuments, setSavedDocuments] = useState([]);
   const [deletedDocumentIds, setDeletedDocumentIds] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const { user, setUser } = useUser();
+  const documentsPerPage = 6;
 
-  const searchFirestore = async (year, supervisor) => {
+  const searchFirestore = async (year, supervisor, page) => {
     try {
       const booksRef = collection(db, "Thesis");
       let q = query(booksRef, where("category", "==", courseName));
@@ -43,7 +46,15 @@ const CourseDetails = () => {
 
       const querySnapshot = await getDocs(q);
       const documentData = querySnapshot.docs.map((doc) => doc.data());
-      setDocuments(documentData);
+      const totalDocuments = documentData.length;
+      const totalPages = Math.ceil(totalDocuments / documentsPerPage);
+      setTotalPages(totalPages);
+
+      // Pagination
+      const startIndex = (page - 1) * documentsPerPage;
+      const endIndex = startIndex + documentsPerPage;
+      const paginatedDocuments = documentData.slice(startIndex, endIndex);
+      setDocuments(paginatedDocuments);
     } catch (error) {
       console.error(error);
     }
@@ -131,15 +142,22 @@ const CourseDetails = () => {
 
         const querySnapshot = await getDocs(q);
         const documentData = querySnapshot.docs.map((doc) => doc.data());
-        setDocuments(documentData);
+        const totalDocuments = documentData.length;
+        const totalPages = Math.ceil(totalDocuments / documentsPerPage);
+        setTotalPages(totalPages);
+
+        // Pagination
+        const startIndex = (currentPage - 1) * documentsPerPage;
+        const endIndex = startIndex + documentsPerPage;
+        const paginatedDocuments = documentData.slice(startIndex, endIndex);
+        setDocuments(paginatedDocuments);
       } catch (error) {
         console.log("Error fetching documents:", error);
       }
     };
 
     fetchDocuments();
-  }, [courseName, name, selectedYear, selectedSupervisor]);
-
+  }, [courseName, name, selectedYear, selectedSupervisor, currentPage]);
   useEffect(() => {
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -153,13 +171,20 @@ const CourseDetails = () => {
   const handleYearChange = (e) => {
     const year = e.target.value;
     setSelectedYear(year);
-    searchFirestore(year);
+    setCurrentPage(1);
+    searchFirestore(year, selectedSupervisor, 1);
   };
 
   const handleSupervisorChange = (e) => {
     const supervisor = e.target.value;
     setSelectedSupervisor(supervisor);
-    searchFirestore(selectedYear, supervisor);
+    setCurrentPage(1);
+    searchFirestore(selectedYear, supervisor, 1);
+  };
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    searchFirestore(selectedYear, selectedSupervisor, pageNumber);
   };
 
   const openDocumentInNewWindow = (document) => {
@@ -199,7 +224,7 @@ const CourseDetails = () => {
               onChange={handleSupervisorChange}
             >
               <option value="">All Supervisors</option>
-              <option value="Dr. Abu Hasnat Mohammad Ashfak Habib">
+              <option value="Dr. A.H.M. Ashfak Habib">
                 Dr. Abu Hasnat Mohammad Ashfak Habib
               </option>
               <option value="Dr. Kaushik Deb">Dr. Kaushik Deb</option>
@@ -209,7 +234,7 @@ const CourseDetails = () => {
               <option value="Dr. Mohammed Moshiul Hoque">
                 Dr. Mohammed Moshiul Hoque
               </option>
-              <option value="Dr. Mohammad Shamsul Arefin">
+              <option value="Prof. Dr. Mohammad Shamsul Arefin">
                 Dr. Mohammad Shamsul Arefin
               </option>
               <option value="Dr. Asaduzzaman">Dr. Asaduzzaman</option>
@@ -219,13 +244,11 @@ const CourseDetails = () => {
               <option value="Muhammad Kamal Hossen">
                 Muhammad Kamal Hossen
               </option>
-              <option value="Mohammad Obaidur Rahman">
-                Mohammad Obaidur Rahman
-              </option>
+              <option value="Obaidur Rahman">Mohammad Obaidur Rahman</option>
               <option value="Dr. Pranab Kumar Dhar">
                 Dr. Pranab Kumar Dhar
               </option>
-              <option value="Mir. Md. Saki Kowsar">Mir. Md. Saki Kowsar</option>
+              <option value="Mir Md. Saki Kowsar">Mir. Md. Saki Kowsar</option>
               <option value="Dr. Md. Iqbal Hasan Sarker">
                 Dr. Md. Iqbal Hasan Sarker
               </option>
@@ -310,6 +333,36 @@ const CourseDetails = () => {
           ) : (
             <div className="no-documents-message">
               <p>No documents found.</p>
+            </div>
+          )}
+          {totalPages > 1 && (
+            <div className="pagination">
+              <button
+                className={currentPage === 1 ? "disabled" : ""}
+                onClick={() => handlePageChange(currentPage - 1)}
+              >
+                Prev
+              </button>
+              <div className="page-numbers">
+                {Array.from(
+                  { length: totalPages },
+                  (_, index) => index + 1
+                ).map((pageNumber) => (
+                  <button
+                    key={pageNumber}
+                    className={pageNumber === currentPage ? "active" : ""}
+                    onClick={() => handlePageChange(pageNumber)}
+                  >
+                    {pageNumber}
+                  </button>
+                ))}
+              </div>
+              <button
+                className={currentPage === totalPages ? "disabled" : ""}
+                onClick={() => handlePageChange(currentPage + 1)}
+              >
+                Next
+              </button>
             </div>
           )}
         </div>

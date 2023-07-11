@@ -1,7 +1,7 @@
+import React, { useState, useEffect, useCallback } from "react";
 import { useHistory, useLocation, Link } from "react-router-dom";
 import Modal from "react-modal";
 import { FaSave, FaRegSave } from "react-icons/fa";
-import React, { useState, useEffect, useCallback } from "react";
 import {
   collection,
   getDocs,
@@ -12,10 +12,10 @@ import {
   doc,
 } from "firebase/firestore";
 import { db } from "../../firebase";
-import "./SearchPage.css";
 import SavedPapers from "../SavedPapers/SavedPapers";
 import { useUser } from "./../../UserContext";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import "./SearchPage.css";
 
 const SearchResults = () => {
   const location = useLocation();
@@ -31,6 +31,9 @@ const SearchResults = () => {
   const [savedDocuments, setSavedDocuments] = useState([]);
   const [deletedDocumentIds, setDeletedDocumentIds] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const resultsPerPage = 8;
 
   const searchFirestore = async (searchKey, year, supervisor) => {
     try {
@@ -46,7 +49,7 @@ const SearchResults = () => {
       }
 
       const querySnapshot = await getDocs(q);
-      let books = [];
+      const books = [];
       querySnapshot.forEach((doc) => {
         const { title, summary, category, supervisor } = doc.data();
         if (
@@ -58,36 +61,24 @@ const SearchResults = () => {
           (category && category.toLowerCase() === searchKey.toLowerCase())
         ) {
           const regex = new RegExp(searchKey, "gi");
-
           const highlightedSummary = summary?.replace(
             regex,
             (match) => `<strong>${match}</strong>`
           );
-
           books.push({ ...doc.data(), highlightedSummary });
         }
       });
+
+      const totalResults = books.length;
+      setTotalPages(Math.ceil(totalResults / resultsPerPage));
       setSearchResults(books);
     } catch (error) {
       console.error(error);
     }
   };
 
-  const saveSearchStateToSessionStorage = () => {
-    sessionStorage.setItem("searchKeyword", searchKeyword);
-    sessionStorage.setItem("selectedYear", selectedYear);
-    sessionStorage.setItem("selectedSupervisor", selectedSupervisor);
-  };
-
-  const retrieveSearchStateFromSessionStorage = () => {
-    const storedSearchKeyword = sessionStorage.getItem("searchKeyword");
-    const storedSelectedYear = sessionStorage.getItem("selectedYear");
-    const storedSelectedSupervisor =
-      sessionStorage.getItem("selectedSupervisor");
-
-    setSearchKeyword(storedSearchKeyword || "");
-    setSelectedYear(storedSelectedYear || "");
-    setSelectedSupervisor(storedSelectedSupervisor || "");
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
   };
 
   const handleSearch = (e) => {
@@ -126,8 +117,15 @@ const SearchResults = () => {
   }, [initialKeyword, selectedYear, selectedSupervisor]);
 
   useEffect(() => {
-    saveSearchStateToSessionStorage();
-  }, [searchKeyword, selectedYear, selectedSupervisor]);
+    const storedSearchKeyword = sessionStorage.getItem("searchKeyword");
+    const storedSelectedYear = sessionStorage.getItem("selectedYear");
+    const storedSelectedSupervisor =
+      sessionStorage.getItem("selectedSupervisor");
+
+    setSearchKeyword(storedSearchKeyword || "");
+    setSelectedYear(storedSelectedYear || "");
+    setSelectedSupervisor(storedSelectedSupervisor || "");
+  }, []);
 
   useEffect(() => {
     const auth = getAuth();
@@ -135,7 +133,7 @@ const SearchResults = () => {
       setUser(user);
     });
 
-    return () => unsubscribe(); // Cleaningup the listener on unmount
+    return () => unsubscribe(); // Cleanup the listener on unmount
   }, [setUser]);
 
   const fetchSavedDocuments = useCallback(async () => {
@@ -217,7 +215,10 @@ const SearchResults = () => {
     }
   };
 
-  console.log("Logged-in User UID:", user ? user.uid : "No user logged in");
+  const displayedResults = searchResults.slice(
+    (currentPage - 1) * resultsPerPage,
+    currentPage * resultsPerPage
+  );
 
   return (
     <div className="searchpage-container">
@@ -236,12 +237,10 @@ const SearchResults = () => {
               onChange={(e) => setSearchKeyword(e.target.value)}
               placeholder="Search..."
             />
-
             <button type="submit" className="search-button">
               <i className="fa fa-search"></i>
             </button>
           </form>
-          {/* Year filter */}
           <div className="option">
             <label htmlFor="year-select">Year:</label>
             <select
@@ -259,7 +258,6 @@ const SearchResults = () => {
               )}
             </select>
           </div>
-
           <div className="option">
             <label htmlFor="supervisor-select">Supervisor:</label>
             <select
@@ -268,7 +266,7 @@ const SearchResults = () => {
               onChange={handleSupervisorChange}
             >
               <option value="">All Supervisors</option>
-              <option value="Dr. Abu Hasnat Mohammad Ashfak Habib">
+              <option value="Dr. A.H.M. Ashfak Habib">
                 Dr. Abu Hasnat Mohammad Ashfak Habib
               </option>
               <option value="Dr. Kaushik Deb">Dr. Kaushik Deb</option>
@@ -288,13 +286,11 @@ const SearchResults = () => {
               <option value="Muhammad Kamal Hossen">
                 Muhammad Kamal Hossen
               </option>
-              <option value="Mohammad Obaidur Rahman">
-                Mohammad Obaidur Rahman
-              </option>
+              <option value="Obaidur Rahman">Mohammad Obaidur Rahman</option>
               <option value="Dr. Pranab Kumar Dhar">
                 Dr. Pranab Kumar Dhar
               </option>
-              <option value="Mir. Md. Saki Kowsar">Mir. Md. Saki Kowsar</option>
+              <option value="Mir Md. Saki Kowsar">Mir. Md. Saki Kowsar</option>
               <option value="Dr. Md. Iqbal Hasan Sarker">
                 Dr. Md. Iqbal Hasan Sarker
               </option>
@@ -327,7 +323,9 @@ const SearchResults = () => {
               <option value="Avishek Das">Avishek Das</option>
               <option value="Moumita Sen Sarma">Moumita Sen Sarma</option>
               <option value="Saadman Sakib">Saadman Sakib</option>
-              <option value="Shuhena Salam Aonty">Shuhena Salam Aonty</option>
+              <option value="Shuhena Salam Aonty">
+                Shuhena Salam Aonty
+              </option>{" "}
             </select>
           </div>
           <div className="option">
@@ -337,9 +335,9 @@ const SearchResults = () => {
           </div>
         </div>
         <div className="search-results-container">
-          {searchResults.length > 0 ? (
+          {displayedResults.length > 0 ? (
             <ul className="books">
-              {searchResults.map((result, index) => (
+              {displayedResults.map((result, index) => (
                 <li key={index} className="book-card">
                   <div className="metadata">
                     <div className="result-info">
@@ -422,6 +420,35 @@ const SearchResults = () => {
           </Modal>
         </div>
       </div>
+      {totalPages > 1 && (
+        <div className="pagination">
+          <button
+            className={currentPage === 1 ? "disabled" : ""}
+            onClick={() => handlePageChange(currentPage - 1)}
+          >
+            Prev
+          </button>
+          <div className="page-numbers">
+            {Array.from({ length: totalPages }, (_, index) => index + 1).map(
+              (pageNumber) => (
+                <button
+                  key={pageNumber}
+                  className={pageNumber === currentPage ? "active" : ""}
+                  onClick={() => handlePageChange(pageNumber)}
+                >
+                  {pageNumber}
+                </button>
+              )
+            )}
+          </div>
+          <button
+            className={currentPage === totalPages ? "disabled" : ""}
+            onClick={() => handlePageChange(currentPage + 1)}
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
   );
 };

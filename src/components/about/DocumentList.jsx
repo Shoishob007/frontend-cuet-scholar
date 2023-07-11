@@ -10,6 +10,9 @@ const DocumentList = () => {
   const [searchKeyword, setSearchKeyword] = useState("");
   const [selectedYear, setSelectedYear] = useState("");
   const [selectedSupervisor, setSelectedSupervisor] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const documentsPerPage = 10;
 
   useEffect(() => {
     fetchDocuments();
@@ -42,6 +45,27 @@ const DocumentList = () => {
       history.push(`/search-results?keyword=${searchKeyword}`);
     }
   };
+
+  useEffect(() => {
+    const calculateTotalPages = () => {
+      const totalDocs = documents.length;
+      const totalPagesCount = Math.ceil(totalDocs / documentsPerPage);
+      setTotalPages(totalPagesCount);
+    };
+
+    calculateTotalPages();
+  }, [documents]);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const indexOfLastDocument = currentPage * documentsPerPage;
+  const indexOfFirstDocument = indexOfLastDocument - documentsPerPage;
+  const currentDocuments = documents.slice(
+    indexOfFirstDocument,
+    indexOfLastDocument
+  );
 
   return (
     <div className="alldocuments">
@@ -93,8 +117,11 @@ const DocumentList = () => {
               className="select-supervisor"
             >
               <option value="">All Supervisors</option>
-              <option value="Dr. Abu Hasnat Mohammad Ashfak Habib">
+              <option value="Dr. A.H.M. Ashfak Habib">
                 Dr. Abu Hasnat Mohammad Ashfak Habib
+              </option>
+              <option value="Dr. A.H.M Ashfak Habib">
+                Dr. A.H.M Ashfak Habib
               </option>
               <option value="Dr. Kaushik Deb">Dr. Kaushik Deb</option>
               <option value="Dr. Muhammad Ibrahim Khan">
@@ -113,13 +140,11 @@ const DocumentList = () => {
               <option value="Muhammad Kamal Hossen">
                 Muhammad Kamal Hossen
               </option>
-              <option value="Mohammad Obaidur Rahman">
-                Mohammad Obaidur Rahman
-              </option>
+              <option value="Obaidur Rahman">Mohammad Obaidur Rahman</option>
               <option value="Dr. Pranab Kumar Dhar">
                 Dr. Pranab Kumar Dhar
               </option>
-              <option value="Mir. Md. Saki Kowsar">Mir. Md. Saki Kowsar</option>
+              <option value="Mir Md. Saki Kowsar">Mir. Md. Saki Kowsar</option>
               <option value="Dr. Md. Iqbal Hasan Sarker">
                 Dr. Md. Iqbal Hasan Sarker
               </option>
@@ -152,17 +177,15 @@ const DocumentList = () => {
               <option value="Avishek Das">Avishek Das</option>
               <option value="Moumita Sen Sarma">Moumita Sen Sarma</option>
               <option value="Saadman Sakib">Saadman Sakib</option>
-              <option value="Shuhena Salam Aonty">
-                Shuhena Salam Aonty
-              </option>{" "}
+              <option value="Shuhena Salam Aonty">Shuhena Salam Aonty</option>
             </select>
           </div>
         </div>
       </div>
       <div className="right">
-        {documents.length > 0 ? (
+        {currentDocuments.length > 0 ? (
           <ul className="document-list1">
-            {documents.map((document) => (
+            {currentDocuments.map((document) => (
               <li key={document.id} className="document-item">
                 <a
                   href={document.url}
@@ -189,7 +212,37 @@ const DocumentList = () => {
             ))}
           </ul>
         ) : (
-          <p className="right">No documents found.</p>
+          <p className="no-documents-message">No documents found.</p>
+        )}
+
+        {totalPages > 1 && (
+          <div className="pagination">
+            <button
+              className={currentPage === 1 ? "disabled" : ""}
+              onClick={() => handlePageChange(currentPage - 1)}
+            >
+              Prev
+            </button>
+            <div className="page-numbers">
+              {Array.from({ length: totalPages }, (_, index) => index + 1).map(
+                (pageNumber) => (
+                  <button
+                    key={pageNumber}
+                    className={pageNumber === currentPage ? "active" : ""}
+                    onClick={() => handlePageChange(pageNumber)}
+                  >
+                    {pageNumber}
+                  </button>
+                )
+              )}
+            </div>
+            <button
+              className={currentPage === totalPages ? "disabled" : ""}
+              onClick={() => handlePageChange(currentPage + 1)}
+            >
+              Next
+            </button>
+          </div>
         )}
       </div>
     </div>

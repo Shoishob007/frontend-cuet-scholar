@@ -246,3 +246,29 @@
   bottom: 0;
   margin: auto;
 }
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  margin-bottom: 20px; /* Adjust the value as per your preference */
+}
+
+.pagination button {
+  border: none;
+  background-color: transparent;
+  color: #444242;
+  font-size: 16px;
+  cursor: pointer;
+  transition: color 0.3s;
+  margin: 0 5px;
+}
+
+.pagination button:hover {
+  color: #00a4e4;
+}
+
+.pagination .active {
+  color: #00a4e4;
+  font-weight: bold;
+}

@@ -12,7 +12,7 @@
   color: #000;
 }
 .logo h1 {
-  font-size: 30px;
+  font-size: 25px;
   color: #1eb2a6;
   font-weight: 900;
   text-shadow: -0.5px -0.5px 0 #000, 0.5px -0.5px 0 #000, -0.5px 0.5px 0 #000,
@@ -29,8 +29,8 @@
 /*--------head------------*/
 /*--------header------------*/
 header {
-  background-color: rgba(41, 39, 39, 0.6);
-  margin: 0 30px;
+  background-color: rgba(41, 39, 39, 0.5);
+  margin: 0 50px;
 }
 header .nav {
   display: flex !important;

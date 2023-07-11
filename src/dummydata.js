@@ -122,7 +122,7 @@ export const online = [
 export const team = [
   {
     cover: "./images/team/ashfak_sir.jpg",
-    name: "Dr. Abu Hasnat Mohammad Ashfak Habib",
+    name: "Dr. A.H.M. Ashfak Habib",
     work: "Head & Professor",
     number: "88-031-714920~2, Ext. 2327",
     email: "ashfak@cuet.ac.bd",
@@ -178,14 +178,14 @@ export const team = [
   },
   {
     cover: "./images/team/obaidur_sir.jpg",
-    name: "Mohammad Obaidur Rahman",
+    name: "Obaidur Rahman",
     work: "Associate Professor",
     number: "01731-808646, 01970-808646, 031-714920-22",
     email: "obaidur_91@cuet.ac.bd",
   },
   {
     cover: "./images/team/saki_sir.jpg",
-    name: "Mir. Md. Saki Kowsar",
+    name: "Mir Md. Saki Kowsar",
     work: "Assistant Professor",
     number: "",
     email: "sakikowsar@cuet.ac.bd",

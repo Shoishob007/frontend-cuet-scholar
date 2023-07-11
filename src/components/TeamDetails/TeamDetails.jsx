@@ -24,7 +24,10 @@ const TeamDetails = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [savedDocuments, setSavedDocuments] = useState([]);
   const [deletedDocumentIds, setDeletedDocumentIds] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const { user, setUser } = useUser();
+  const documentsPerPage = 5;
 
   const searchFirestore = async (year) => {
     try {
@@ -121,6 +124,8 @@ const TeamDetails = () => {
     fetchDocuments();
   }, [name]);
 
+  console.log(name);
+
   useEffect(() => {
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -140,6 +145,27 @@ const TeamDetails = () => {
   const openDocumentInNewWindow = (document) => {
     window.open(document.url, "_blank");
   };
+
+  useEffect(() => {
+    const calculateTotalPages = () => {
+      const totalDocs = documents.length;
+      const totalPagesCount = Math.ceil(totalDocs / documentsPerPage);
+      setTotalPages(totalPagesCount);
+    };
+
+    calculateTotalPages();
+  }, [documents]);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const indexOfLastDocument = currentPage * documentsPerPage;
+  const indexOfFirstDocument = indexOfLastDocument - documentsPerPage;
+  const currentDocuments = documents.slice(
+    indexOfFirstDocument,
+    indexOfLastDocument
+  );
 
   return (
     <div className="all">
@@ -172,9 +198,9 @@ const TeamDetails = () => {
           </div>
         </div>
         <div className="right_col">
-          {documents.length > 0 ? (
+          {currentDocuments.length > 0 ? (
             <ul>
-              {documents.map((doc, i) => (
+              {currentDocuments.map((doc, i) => (
                 <li key={i}>
                   <h3 onClick={() => openDocumentInNewWindow(doc)}>
                     {doc.title}
@@ -214,6 +240,36 @@ const TeamDetails = () => {
           ) : (
             <div className="no-documents-message">
               <p>No documents found.</p>
+            </div>
+          )}
+          {totalPages > 1 && (
+            <div className="pagination">
+              <button
+                className={currentPage === 1 ? "disabled" : ""}
+                onClick={() => handlePageChange(currentPage - 1)}
+              >
+                Prev
+              </button>
+              <div className="page-numbers">
+                {Array.from(
+                  { length: totalPages },
+                  (_, index) => index + 1
+                ).map((pageNumber) => (
+                  <button
+                    key={pageNumber}
+                    className={pageNumber === currentPage ? "active" : ""}
+                    onClick={() => handlePageChange(pageNumber)}
+                  >
+                    {pageNumber}
+                  </button>
+                ))}
+              </div>
+              <button
+                className={currentPage === totalPages ? "disabled" : ""}
+                onClick={() => handlePageChange(currentPage + 1)}
+              >
+                Next
+              </button>
             </div>
           )}
         </div>
