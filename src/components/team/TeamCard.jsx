@@ -10,7 +10,7 @@ const TeamCard = () => {
           <div className="items_shadow1">
             <div className="img">
               <img src={val.cover} alt="" />
-              <div className="overlay">
+              <div className="overlay-team">
                 <i className="fab fa-github icon small"></i>
                 <i className="fas fa-envelope icon small"></i>
               </div>

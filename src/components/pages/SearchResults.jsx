@@ -10,12 +10,14 @@ import {
 	where,
 	deleteDoc,
 	doc,
+	orderBy
 } from "firebase/firestore";
 import { db } from "../../firebase";
 import "./SearchPage.css";
 import SavedPapers from "../SavedPapers/SavedPapers";
 import { useUser } from "./../../UserContext";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { clickCounter } from "../../utils/helper";
 
 const SearchResults = () => {
 	const location = useLocation();
@@ -34,6 +36,10 @@ const SearchResults = () => {
 	const [currentPage, setCurrentPage] = useState(1);
 	const [totalPages, setTotalPages] = useState(1);
 	const resultsPerPage = 8;
+	const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+	const [sortByPopularity, setSortByPopularity] = useState(false);
+
+
 
 	const searchFirestore = async (searchKey, year, supervisor) => {
 		try {
@@ -46,6 +52,9 @@ const SearchResults = () => {
 
 			if (supervisor) {
 				q = query(q, where("supervisor", "==", supervisor));
+			}
+			if (sortByPopularity) {
+				q = query(q, orderBy("count", "desc"));
 			}
 
 			const querySnapshot = await getDocs(q);
@@ -118,6 +127,8 @@ const SearchResults = () => {
 		searchFirestore(searchKeyword, selectedYear, supervisor);
 	};
 
+
+
 	const openModal = () => {
 		setIsModalOpen(true);
 	};
@@ -180,7 +191,7 @@ const SearchResults = () => {
 	const handleSaveResult = async (result) => {
 		try {
 			if (!user) {
-				alert("Please log in to save the document.");
+				setIsLoginModalOpen(true);
 				return;
 			}
 
@@ -245,8 +256,27 @@ const SearchResults = () => {
 		(currentPage - 1) * resultsPerPage,
 		currentPage * resultsPerPage
 	);
+	const [appeared, setAppeared] = useState(false);
+
+	useEffect(() => {
+		// Add the appeared class after the component is mounted
+		setAppeared(true);
+	}, []);
+	const handleSortByPopularityChange = () => {
+		setSortByPopularity(!sortByPopularity);
+	};
+
 	return (
 		<div className="searchpage-container">
+			{isLoginModalOpen && (
+				<div className={`login-modal ${isLoginModalOpen ? "open" : ""}`}>
+					<div className="modal-content">
+						<h2>Please Log In</h2>
+						<p>You need to log in to save the document.</p>
+						<button onClick={() => setIsLoginModalOpen(false)}>Close</button>
+					</div>
+				</div>
+			)}
 			<div className="logo-container">
 				<Link to="/" className="link-style">
 					<h1 className="searchlogo">CUET SCHOLAR</h1>
@@ -254,31 +284,35 @@ const SearchResults = () => {
 				</Link>
 			</div>
 			<div className="content-container">
-				<div className="options-container">
+				<div className={`options-container ${appeared ? "appeared" : ""}`}>
 					<form onSubmit={handleSearch} className="searchpage_searchbar">
 						<input
 							type="text"
 							value={searchKeyword}
 							onChange={(e) => setSearchKeyword(e.target.value)}
 							placeholder="Search..."
+							className="search-input"
 						/>
 
 						<button type="submit" className="search-button">
 							<i className="fa fa-search"></i>
 						</button>
 					</form>
-					{/* Year filter */}
+					{/* Batch filter */}
 					<div className="option">
-						<label htmlFor="year-select">Year:</label>
+						<label htmlFor="year-select">Batch:</label>
 						<select
 							id="year-select"
 							value={selectedYear}
 							onChange={handleYearChange}
+							className="custom-select"
 						>
-							<option value="">All Years</option>
-							{Array.from({ length: 23 }, (_, index) => 2022 - index).map(
+							<option value="">All Batch</option>
+							{Array.from({ length: 20 }, (_, index) => 2015 - index).map(
 								(year) => (
-									<option key={year} value={year}>
+									<option key={year} value={year}
+										className={appeared ? "select-transition" : ""}
+									>
 										{year}
 									</option>
 								)
@@ -292,6 +326,7 @@ const SearchResults = () => {
 							id="supervisor-select"
 							value={selectedSupervisor}
 							onChange={handleSupervisorChange}
+							className="custom-select"
 						>
 							<option value="">All Supervisors</option>
 							<option value="Dr. A.H.M. Ashfak Habib">
@@ -353,7 +388,16 @@ const SearchResults = () => {
 							<option value="Saadman Sakib">Saadman Sakib</option>
 							<option value="Shuhena Salam Aonty">
 								Shuhena Salam Aonty
-							</option>{" "}						</select>
+							</option>{" "}
+						</select>
+						<br />
+						<br />
+						<div className="checkbox-wrapper-3">
+							<label htmlFor="">Sort By Popularity</label>
+							<input type="checkbox" id="cbx-3" checked={sortByPopularity}
+								onChange={handleSortByPopularityChange} />
+							<label for="cbx-3" className="toggle"><span></span></label>
+						</div>
 					</div>
 					<div className="option">
 						<Link to="#" className="saved-papers-link" onClick={openModal}>
@@ -373,6 +417,7 @@ const SearchResults = () => {
 												target="_blank"
 												rel="noreferrer"
 												className="title"
+												onClick={clickCounter(result.id.toString())}
 											>
 												{result.title}
 											</a>
@@ -381,7 +426,7 @@ const SearchResults = () => {
 													<p>By: {result.author}, </p>
 												</li>
 												<li className="detail">
-													<p>Year: {result.year},</p>
+													<p>Batch: {result.year},</p>
 												</li>
 												<li className="detail">
 													<p>Supervisor: {result.supervisor}</p>

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useHistory, Link } from "react-router-dom";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { collection, getDocs, query, where, orderBy } from "firebase/firestore";
 import { db } from "../../firebase";
 import "./document.css";
+import { clickCounter } from "../../utils/helper";
 
 const DocumentList = () => {
   const history = useHistory();
@@ -12,8 +13,8 @@ const DocumentList = () => {
   const [selectedSupervisor, setSelectedSupervisor] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [sortByPopularity, setSortByPopularity] = useState(false);
   const documentsPerPage = 10;
-
   useEffect(() => {
     fetchDocuments();
   }, [selectedYear, selectedSupervisor]);
@@ -30,6 +31,9 @@ const DocumentList = () => {
       if (selectedSupervisor) {
         q = query(q, where("supervisor", "==", selectedSupervisor));
       }
+      if (sortByPopularity) {
+        q = query(q, orderBy("count", "desc"));
+      }
 
       const querySnapshot = await getDocs(q);
       const documentData = querySnapshot.docs.map((doc) => doc.data());
@@ -45,6 +49,7 @@ const DocumentList = () => {
       history.push(`/search-results?keyword=${searchKeyword}`);
     }
   };
+
   useEffect(() => {
     const calculateTotalPages = () => {
       const totalDocs = documents.length;
@@ -65,6 +70,10 @@ const DocumentList = () => {
     indexOfFirstDocument,
     indexOfLastDocument
   );
+
+  const handleSortByPopularityChange = () => {
+    setSortByPopularity(!sortByPopularity);
+  };
 
 
   return (
@@ -92,15 +101,15 @@ const DocumentList = () => {
             </form>
           </div>
           <div className="optionscontainer">
-            <label htmlFor="year-select1">Year:</label>
+            <label htmlFor="year-select1">Batch:</label>
             <select
               id="year-select1"
               value={selectedYear}
               onChange={(e) => setSelectedYear(e.target.value)}
               className="select-year"
             >
-              <option value="">All Years</option>
-              {Array.from({ length: 23 }, (_, index) => 2022 - index).map(
+              <option value="">All Batch</option>
+              {Array.from({ length: 20 }, (_, index) => 2015 - index).map(
                 (year) => (
                   <option key={year} value={year}>
                     {year}
@@ -108,6 +117,7 @@ const DocumentList = () => {
                 )
               )}
             </select>
+
 
             <label htmlFor="supervisor-select">Supervisor:</label>
             <select
@@ -144,7 +154,7 @@ const DocumentList = () => {
               <option value="Dr. Pranab Kumar Dhar">
                 Dr. Pranab Kumar Dhar
               </option>
-              <option value="Obaidur Rahman">Mohammad Obaidur Rahman</option>
+              <option value="Mir Md. Saki Kowsar">Mir. Md. Saki Kowsar</option>
               <option value="Dr. Md. Iqbal Hasan Sarker">
                 Dr. Md. Iqbal Hasan Sarker
               </option>
@@ -179,9 +189,17 @@ const DocumentList = () => {
               <option value="Saadman Sakib">Saadman Sakib</option>
               <option value="Shuhena Salam Aonty">Shuhena Salam Aonty</option>
             </select>
+            <br />
+            <div className="checkbox-wrapper-3">
+              <label htmlFor="">Sort By Popularity</label>
+              <input type="checkbox" id="cbx-3" checked={sortByPopularity}
+                onChange={handleSortByPopularityChange} />
+              <label for="cbx-3" className="toggle"><span></span></label>
+            </div>
           </div>
         </div>
       </div>
+
       <div className="right">
         {currentDocuments.length > 0 ? (
           <ul className="document-list1">
@@ -192,6 +210,7 @@ const DocumentList = () => {
                   target="_blank"
                   rel="noreferrer"
                   className="title"
+                  onClick={clickCounter(document.id.toString())}
                 >
                   {document.title}
                 </a>
@@ -200,7 +219,7 @@ const DocumentList = () => {
                     <p className="document-author">By {document.author}</p>
                   </li>
                   <li className="document-detail">
-                    <p className="document-year">Year: {document.year}</p>
+                    <p className="document-year">Batch: {document.year}</p>
                   </li>
                   <li className="document-detail">
                     <p className="document-supervisor">
@@ -214,6 +233,7 @@ const DocumentList = () => {
         ) : (
           <p className="no-documents-message">No documents found.</p>
         )}
+
         {totalPages > 1 && (
           <div className="pagination">
             <button

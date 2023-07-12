@@ -1,4 +1,9 @@
 /*--------head------------*/
+.header{
+  z-index: 999;
+  position: sticky;
+}
+
 .head {
   padding: 10px 0;
   color: #1eb2a6;

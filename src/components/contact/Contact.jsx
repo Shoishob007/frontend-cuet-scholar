@@ -106,6 +106,7 @@ const Contact = () => {
               We're accepting any publication you want to post. Fill up the
               form:
             </p>
+
             <form onSubmit={handleSubmit}>
               <div className="flexSB-form">
                 <input
@@ -147,11 +148,12 @@ const Contact = () => {
                 />
                 <input
                   type="number"
-                  placeholder="Year"
+                  placeholder="Batch"
                   required
                   value={year}
                   onChange={(e) => setYear(e.target.value)}
                 />
+
               </div>
               <div className="contact-upload">
                 <textarea
@@ -188,23 +190,11 @@ const Contact = () => {
                 </p>
               </div>
             </div>
-
-            {/* <form action=''>
-              <div className='flexSB'>
-                <input type='text' placeholder='Name' />
-                <input type='email' placeholder='Email' />
-              </div>
-              <input type='text' placeholder='Subject' />
-              <textarea placeholder="Create a message here..." cols='30' rows='10'>
-
-              </textarea>
-              <button className='primary-btn'>SEND MESSAGE</button>
-            </form> */}
           </div>
         </div>
       </section>
     </>
-  )
-}
+  );
+};
 
-export default Contact
+export default Contact;

@@ -1,19 +1,19 @@
-import React,{useState,useEffect,useRef} from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import "./courses.css";
 import { online } from "../../dummydata";
 import Heading from "../common/heading/Heading";
 import CountUp from "react-countup";
 import { collection, getDocs } from "firebase/firestore";
-import { db } from "../../firebase"; 
+import { db } from "../../firebase";
 
 const OnlineCourses = () => {
   const [documents, setDocuments] = useState([]);
   const [categories, setCategory] = useState({});
-	const [isVisible, setIsVisible] = useState(false);
-	const containerRef = useRef(null);
+  const [isVisible, setIsVisible] = useState(false);
+  const containerRef = useRef(null);
   useEffect(() => {
-    
+
     const fetchDocuments = async () => {
       try {
         const booksRef = collection(db, "Thesis"); // Replace 'db' with your Firestore instance
@@ -35,43 +35,42 @@ const OnlineCourses = () => {
 
     fetchDocuments();
     const options = {
-			root: null,
-			rootMargin: "0px",
-			threshold: 0.5, // Adjust threshold as per your requirement
-		};
+      root: null,
+      rootMargin: "0px",
+      threshold: 0.5, // Adjust threshold as per your requirement
+    };
 
-		const observer = new IntersectionObserver(handleObserver, options);
+    const observer = new IntersectionObserver(handleObserver, options);
 
-		if (containerRef.current) {
-			observer.observe(containerRef.current);
-		}
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
 
-		return () => {
-			if (containerRef.current) {
-				// eslint-disable-next-line react-hooks/exhaustive-deps
-				observer.unobserve(containerRef.current);
-			}
-		};
+    return () => {
+      if (containerRef.current) {
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        observer.unobserve(containerRef.current);
+      }
+    };
   }, []);
   const handleObserver = (entries) => {
-		entries.forEach((entry) => {
-			if (entry.isIntersecting) {
-				setIsVisible(true);
-			}
-		});
-	};
-   console.log(categories);
-   return (
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        setIsVisible(true);
+      }
+    });
+  };
+  console.log(categories);
+  return (
     <>
       <section ref={containerRef}
-				className={`online ${isVisible ? "animate" : ""}`}>
+        className={`online ${isVisible ? "animate" : ""}`}>
         <div className="container">
           <Heading subtitle="COURSES" title="Browse According To Your Interest" />
           <div className="content grid3">
-            {Object.entries(categories).map(([category, count],i) => (
-              <Link to={`/course/${category}`} key={category} className={` ${
-                i % 2 === 0 ? "rowFadeInLeft" : "rowFadeInRight"
-              }`}>
+            {Object.entries(categories).map(([category, count], i) => (
+              <Link to={`/course/${category}`} key={category} className={` ${i % 2 === 0 ? "rowFadeInLeft" : "rowFadeInRight"
+                }`}>
                 <div className="box1">
                   <div className="img">
                     {/* Replace with appropriate image source */}
@@ -80,7 +79,7 @@ const OnlineCourses = () => {
                   </div>
                   <h1>{category}</h1>
                   <span>
-                    <CountUp end={count} duration={5} /> papers
+                    <CountUp end={count} duration={10} /> papers
                   </span>
                 </div>
               </Link>

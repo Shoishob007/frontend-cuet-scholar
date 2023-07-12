@@ -11,13 +11,15 @@ import {
   addDoc,
   deleteDoc,
   doc,
+  orderBy
 } from "firebase/firestore";
 import { db } from "../../firebase";
 import SavedPapers from "../SavedPapers/SavedPapers";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useUser } from "./../../UserContext";
 import "./course_details.css";
-import Header from "../common/header/Header";
+import Head from '../common/header/Head';
+import { clickCounter } from "../../utils/helper";
 
 const CourseDetails = () => {
   const { courseName } = useParams();
@@ -29,6 +31,9 @@ const CourseDetails = () => {
   const [savedDocuments, setSavedDocuments] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [searchResults, setSearchResults] = useState([]);
+  const [sortByPopularity, setSortByPopularity] = useState(false);
+
   const [deletedDocumentIds, setDeletedDocumentIds] = useState([]);
   const { user, setUser } = useUser();
   const documentsPerPage = 6;
@@ -141,6 +146,10 @@ const CourseDetails = () => {
         if (selectedSupervisor) {
           q = query(q, where("supervisor", "==", selectedSupervisor));
         }
+        if (sortByPopularity) {
+          q = query(q, orderBy("count", "desc"));
+        }
+
 
         const querySnapshot = await getDocs(q);
         const documentData = querySnapshot.docs.map((doc) => doc.data());
@@ -192,29 +201,68 @@ const CourseDetails = () => {
   };
 
   const openDocumentInNewWindow = (document) => {
+    clickCounter(document.id.toString())
     window.open(document.url, "_blank");
+
+  };
+  const [isHeadingAnimated, setIsHeadingAnimated] = useState(false);
+
+  useEffect(() => {
+    setIsHeadingAnimated(true);
+  }, []);
+  useEffect(() => {
+    animateBookCards();
+  }, [searchResults]);
+
+  const animateBookCards = () => {
+    const bookCards = document.querySelectorAll(".book-card");
+    bookCards.forEach((card, index) => {
+      card.style.animationDelay = `${index * 0.2}s`;
+    });
+  };
+  const [appeared, setAppeared] = useState(false);
+
+  useEffect(() => {
+    // Add the appeared class after the component is mounted
+    setAppeared(true);
+  }, []);
+
+  const handleSortByPopularityChange = () => {
+    setSortByPopularity(!sortByPopularity);
   };
 
+
   return (
-    <><Header />
+    <>
+      <div className="cHead">
+        <Head />
+      </div>
       <div className="all">
 
         <div className="supervise">
-          <h2>Thesis works in {courseName} category</h2>
+          <h2
+            className={`heading-animation ${isHeadingAnimated ? "heading-animated" : ""
+              }`}
+          >
+            Thesis works in {courseName} ...
+          </h2>
         </div>
         <div className="team-details">
           <div className="left_col">
+
             <div className="option">
-              <label htmlFor="year-select">Year:</label>
+              <label htmlFor="year-select">Batch:</label>
+              <br />
               <select
                 id="year_select"
                 value={selectedYear}
                 onChange={handleYearChange}
+                className="custom-select"
               >
-                <option value="">All Years</option>
-                {Array.from({ length: 23 }, (_, index) => 2022 - index).map(
+                <option value="">All Batch</option>
+                {Array.from({ length: 20 }, (_, index) => 2015 - index).map(
                   (year) => (
-                    <option key={year} value={year}>
+                    <option className={appeared ? "select-transition" : ""} key={year} value={year}>
                       {year}
                     </option>
                   )
@@ -228,6 +276,7 @@ const CourseDetails = () => {
                 id="supervisor-select"
                 value={selectedSupervisor}
                 onChange={handleSupervisorChange}
+                className="custom-select"
               >
                 <option value="">All Supervisors</option>
                 <option value="Dr. A.H.M. Ashfak Habib">
@@ -289,6 +338,13 @@ const CourseDetails = () => {
                 <option value="Saadman Sakib">Saadman Sakib</option>
                 <option value="Shuhena Salam Aonty">Shuhena Salam Aonty</option>
               </select>
+              <br />
+              <div className="checkbox-wrapper-3">
+                <label htmlFor="">Sort By Popularity</label>
+                <input type="checkbox" id="cbx-3" checked={sortByPopularity}
+                  onChange={handleSortByPopularityChange} />
+                <label for="cbx-3" className="toggle"><span></span></label>
+              </div>
             </div>
             <div className="option">
               <Link to="#" className="saved-papers-link" onClick={openModal}>
@@ -300,14 +356,14 @@ const CourseDetails = () => {
             {documents.length > 0 ? (
               <ul>
                 {documents.map((doc, i) => (
-                  <li key={i}>
+                  <li key={i} className="book-card">
                     <h3 onClick={() => openDocumentInNewWindow(doc)}>
                       {doc.title}
                     </h3>
                     <div className="details">
                       <p>By: {doc.author}, </p>
                       <p>ID: {doc.id}, </p>
-                      <p>Year: {doc.year}</p>
+                      <p>Batch: {doc.year}</p>
                     </div>
                     <p>{doc.summary}</p>
                     <ul>

@@ -43,7 +43,7 @@ const Header = () => {
   console.log("Logged-in User UID:", user ? user.uid : "No user logged in");
 
   return (
-    <>
+    <div className="header">
       <Head />
       <header>
         <nav className="flexSB">
@@ -122,7 +122,7 @@ const Header = () => {
           </button>
         </nav>
       </header>
-    </>
+    </div>
   );
 };
 

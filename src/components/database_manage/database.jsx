@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import {
   collection,
+  updateDoc,
+  writeBatch,
+  query,
+  where,
   addDoc,
   getDocs,
   doc,
@@ -15,6 +19,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 
 const DocumentForm = () => {
+  const [countAdded, setCountAdded] = useState(false);
   const [documents, setDocuments] = useState([]);
   const [thesisDocuments, setThesisDocuments] = useState([]);
   const [requestDocuments, setRequestDocuments] = useState([]);
@@ -31,6 +36,8 @@ const DocumentForm = () => {
   const [isTableExpanded, setIsTableExpanded] = useState(false);
   const [isRequestTable, setIsRequestTable] = useState(false);
   const formRef = useRef(null);
+  const [replaceYear, setReplaceYear] = useState("");
+  const [newYear, setNewYear] = useState("");
 
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, "Thesis"), (snapshot) => {
@@ -282,7 +289,7 @@ const DocumentForm = () => {
 
   const handleDeleteRequest = async (id) => {
     try {
-      await deleteDoc(doc(db, "Requests", id));
+      await deleteDoc(doc(db, "Requests", id.toString()));
       console.log(id);
       console.log("Document deleted successfully!");
       alert("Document deleted successfully!");
@@ -336,6 +343,16 @@ const DocumentForm = () => {
     formRef.current.scrollIntoView({ behavior: "smooth" });
   };
 
+  const handleAddCountField = async () => {
+    try {
+      const docRef = await addDoc(collection(db, "Thesis"), { count: 0 });
+      console.log("Count field added successfully with ID:", docRef.id);
+      setCountAdded(true);
+    } catch (error) {
+      console.error("Error adding count field:", error);
+    }
+  };
+
   return (
     <div className="documents">
       <div className="document-list-users">
@@ -351,10 +368,10 @@ const DocumentForm = () => {
                 <th>Author</th>
                 <th>ID</th>
                 <th>Supervisor</th>
-                <th>URL</th>
                 <th>Category</th>
                 <th>Summary</th>
-                <th>Year</th>
+                <th>Batch</th>
+                <th>URL</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -442,10 +459,10 @@ const DocumentForm = () => {
                 <th>Author</th>
                 <th>ID</th>
                 <th>Supervisor</th>
-                <th>URL</th>
                 <th>Category</th>
                 <th>Summary</th>
-                <th>Year</th>
+                <th>Batch</th>
+                <th>URL</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -566,9 +583,9 @@ const DocumentForm = () => {
             onChange={(e) => setCategory(e.target.value)}
             required
           />
-          <label htmlFor="year">Year:</label>
+          <label htmlFor="year">Batch:</label>
           <input
-            placeholder="Enter Year"
+            placeholder="Enter Batch"
             type="number"
             id="year"
             value={year}
@@ -623,6 +640,8 @@ const DocumentForm = () => {
 
       <div className="add-document-button">
         <button onClick={resetForm}>Add Document</button>
+        <button onClick={handleAddCountField}>Add Count Field</button>
+        {countAdded && <p>Count field added successfully!</p>}
       </div>
     </div>
   );

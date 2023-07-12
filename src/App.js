@@ -18,6 +18,7 @@ import DocumentList from "./components/about/DocumentList";
 import SavedPapers from "./components/SavedPapers/SavedPapers";
 import Loader from "./components/preloader/Preloader";
 import { UserProvider } from "./UserContext"; // Import the UserProvider
+import { Error } from "./components/404/404";
 
 const App = () => {
   const [loading, setLoading] = useState(true);
@@ -48,6 +49,8 @@ const App = () => {
           <Route path="/course/:courseName" component={CourseDetails} />
           <Route path="/team/:name" component={TeamDetails} />
           <Route exact path="/documents" component={DocumentList} />
+          {/* <Route path="*" component={Error} /> */}
+
 
           <Route>
             <Header />
@@ -57,6 +60,8 @@ const App = () => {
               <Route exact path="/courses" component={CourseHome} />
               <Route exact path="/team" component={Team} />
               <Route exact path="/contact" component={Contact} />
+              <Route path="*" component={Error} />
+
             </Switch>
             <Footer />
           </Route>

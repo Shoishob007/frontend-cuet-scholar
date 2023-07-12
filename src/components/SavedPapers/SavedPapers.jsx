@@ -83,9 +83,8 @@ const SavedPapers = () => {
           {savedDocuments.map((document) => (
             <li
               key={document._id}
-              className={`saved-paper-card ${
-                document.isSavedAnimation ? "saved-animation" : ""
-              }`}
+              className={`saved-paper-card ${document.isSavedAnimation ? "saved-animation" : ""
+                }`}
             >
               {" "}
               <div className="metadata">
@@ -103,7 +102,7 @@ const SavedPapers = () => {
                       <p>By: {document.author},</p>
                     </li>
                     <li className="detail">
-                      <p>Year: {document.year},</p>
+                      <p>Batch: {document.year},</p>
                     </li>
                     <li className="detail">
                       <p>Supervisor: {document.supervisor}</p>

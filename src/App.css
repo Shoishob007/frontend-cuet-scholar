@@ -4,6 +4,9 @@
   margin: 0;
   box-sizing: border-box;
 }
+#root{
+  overflow-x: hidden;
+}
 body {
   font-family: "Roboto", sans-serif;
   background-color: #f8f8f8;

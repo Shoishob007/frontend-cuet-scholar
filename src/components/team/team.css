@@ -17,7 +17,7 @@
 .small {
   font-size: 15px;
 }
-.overlay {
+.overlay-team {
   position: absolute;
   bottom: 0;
   z-index: 11;

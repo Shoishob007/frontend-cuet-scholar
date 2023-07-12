@@ -18,8 +18,8 @@ const Awrapper = () => {
               <div className='text'>
                 <h1>
                   {formattedData.charAt(0) === "+" ? formattedData : ""}
-                  <CountUp end={parseInt(dataWithoutComma)} duration={5} />
-                   +
+                  <CountUp end={parseInt(dataWithoutComma)} duration={10} />
+                  +
                 </h1>
                 <h3>{val.title}</h3>
               </div>
