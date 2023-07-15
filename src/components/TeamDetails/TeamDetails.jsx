@@ -120,7 +120,6 @@ const TeamDetails = () => {
         if (sortByPopularity) {
           q = query(
             q,
-
             orderBy("counter", "desc")
           );
         }

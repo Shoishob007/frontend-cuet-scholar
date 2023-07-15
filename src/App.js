@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { Redirect } from "react-router-dom/cjs/react-router-dom.min";
 import "./App.css";
 import Header from "./components/common/header/Header";
 import Footer from "./components/common/footer/Footer";
@@ -17,11 +18,14 @@ import TeamDetails from "./components/TeamDetails/TeamDetails";
 import DocumentList from "./components/about/DocumentList";
 import SavedPapers from "./components/SavedPapers/SavedPapers";
 import Loader from "./components/preloader/Preloader";
-import { UserProvider } from "./UserContext"; // Import the UserProvider
+import { UserProvider, useUser } from "./UserContext"; // Import the UserProvider
 import { Error } from "./components/404/404";
 
 const App = () => {
   const [loading, setLoading] = useState(true);
+  const { isAdmin } = useUser();
+  console.log(isAdmin);
+
 
   useEffect(() => {
     // Simulating a delay for demonstration purposes
@@ -35,7 +39,7 @@ const App = () => {
   }, []);
 
   return (
-    <UserProvider>
+    <>
       {" "}
       {loading && <Loader />}
       {/* Wrap the entire application with UserProvider */}
@@ -45,7 +49,11 @@ const App = () => {
           <Route exact path="/signup" component={Signup} />
           <Route exact path="/search-results" component={SearchResults} />
           <Route path="/saved-papers" component={SavedPapers} />
-          <Route exact path="/dbm" component={DocumentForm} />
+          {
+            isAdmin && <Route exact path="/dbm" component={DocumentForm} />
+          }
+          {/* <Route exact path="/dbm" component={DocumentForm} /> */}
+
           <Route path="/course/:courseName" component={CourseDetails} />
           <Route path="/team/:name" component={TeamDetails} />
           <Route exact path="/documents" component={DocumentList} />
@@ -67,7 +75,7 @@ const App = () => {
           </Route>
         </Switch>
       </Router>
-    </UserProvider>
+    </>
   );
 };
 

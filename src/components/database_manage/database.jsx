@@ -12,13 +12,17 @@ import {
   deleteDoc,
   onSnapshot,
 } from "firebase/firestore";
+import { Link, useHistory } from 'react-router-dom';
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { db, storage } from "../../firebase";
 import "./database.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
+import { useUser } from "../../UserContext";
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 
 const DocumentForm = () => {
+
   const [countAdded, setCountAdded] = useState(false);
   const [documents, setDocuments] = useState([]);
   const [thesisDocuments, setThesisDocuments] = useState([]);
@@ -38,6 +42,24 @@ const DocumentForm = () => {
   const formRef = useRef(null);
   const [replaceYear, setReplaceYear] = useState("");
   const [newYear, setNewYear] = useState("");
+  const { user, setUser } = useUser();
+
+  const history = useHistory();
+
+  useEffect(() => {
+
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setUser(user);
+    });
+
+    // if the user email is not admin collection redirect to home page
+
+
+    return () => unsubscribe(); // Cleaningup the listener on unmount
+  }, [setUser]);
+  console.log("User:", user);
+
 
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, "Thesis"), (snapshot) => {
@@ -343,6 +365,17 @@ const DocumentForm = () => {
     setCategory("");
     formRef.current.scrollIntoView({ behavior: "smooth" });
   };
+  const handleLogout = async () => {
+    const auth = getAuth();
+    try {
+      await signOut(auth);
+      setUser(null);
+      history.push("/login");
+      // Redirect or perform any additional logic after logout
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
+  };
 
   const handleAddCountField = async () => {
     try {
@@ -641,7 +674,9 @@ const DocumentForm = () => {
 
       <div className="add-document-button">
         <button onClick={resetForm}>Add Document</button>
-        <button onClick={handleAddCountField}>Add Count Field</button>
+        {/* <button onClick={handleAddCountField}>Add Count Field</button> */}
+        <Link to='/' className="link" >Home</Link>
+        <button onClick={handleLogout}>Logout</button>
         {countAdded && <p>Count field added successfully!</p>}
       </div>
     </div>

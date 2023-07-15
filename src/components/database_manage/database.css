@@ -211,7 +211,19 @@ tbody tr:nth-child(even) {
   right: 20px;
   z-index: 1;
 }
+.add-document-button .link{
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-block;
+  transition: background-color 0.3s ease;
 
+
+}
 .add-document-button button {
   background-color: #4caf50;
   color: white;

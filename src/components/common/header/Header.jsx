@@ -9,16 +9,35 @@ const Header = () => {
   const [click, setClick] = useState(false);
   const [keyword, setKeyword] = useState("");
   const history = useHistory();
-  const { user, setUser } = useUser();
+  const { user, setUser, isAdmin } = useUser();
+
 
   useEffect(() => {
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
     });
-
     return () => unsubscribe(); // Cleaningup the listener on unmount
   }, [setUser]);
+
+
+
+  // const checkAdmin = async () => {
+  //   if (user && user.email) {
+  //     const db = getFirestore();
+  //     const adminDocRef = doc(db, "admins", user.email);
+  //     const adminDocSnap = await getDoc(adminDocRef);
+  //     const isAdmin = adminDocSnap ? true : false;
+  //     console.log("isAdmin:", adminDocSnap);
+  //     setUser((prevUser) => ({ ...prevUser, isAdmin }));
+  //   }
+  // };
+
+
+
+
+
+
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -41,6 +60,7 @@ const Header = () => {
     }
   };
   console.log("Logged-in User UID:", user ? user.uid : "No user logged in");
+  console.log(user);
 
   return (
     <div className="header">
@@ -66,11 +86,11 @@ const Header = () => {
             <li>
               <Link to="/contact">Contact</Link>
             </li>
-            {user && user.loginAsAdmin ? (
+            {isAdmin ? (
               // If user is logged in as admin, display the "Database" link and logout option
               <>
                 <li>
-                  <Link to="/database">Database</Link>
+                  <Link to="/dbm">Database</Link>
                 </li>
                 <li>
                   <Link onClick={handleLogout} to="/login">

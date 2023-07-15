@@ -15,6 +15,7 @@ import {
 } from "firebase/firestore";
 import { Link, useHistory } from "react-router-dom";
 import "./login.css";
+import { useUser } from "../../UserContext";
 
 const Login = (props) => {
   const [email, setEmail] = useState("");
@@ -22,6 +23,8 @@ const Login = (props) => {
   const [loginAsAdmin, setLoginAsAdmin] = useState(false);
   const [adminKey, setAdminKey] = useState("");
   const history = useHistory();
+  const { user, setUser } = useUser();
+
 
   useEffect(() => {
     document.body.classList.add("login-signup-body");
@@ -53,6 +56,7 @@ const Login = (props) => {
       if (loginAsAdmin) {
         if (!querySnapshot.empty) {
           // User is an admin
+
           history.push("/dbm");
           alert("Logged in as admin successfully");
         } else {
@@ -68,6 +72,8 @@ const Login = (props) => {
       alert(error.message);
     }
   };
+
+  console.log(user);
 
   return (
     <>
