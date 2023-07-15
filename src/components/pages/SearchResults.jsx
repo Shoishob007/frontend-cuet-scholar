@@ -54,7 +54,7 @@ const SearchResults = () => {
 				q = query(q, where("supervisor", "==", supervisor));
 			}
 			if (sortByPopularity) {
-				q = query(q, orderBy("count", "desc"));
+				q = query(q, orderBy("counter", "desc"));
 			}
 
 			const querySnapshot = await getDocs(q);
@@ -87,21 +87,7 @@ const SearchResults = () => {
 		}
 	};
 
-	// const saveSearchStateToSessionStorage = () => {
-	// 	sessionStorage.setItem("searchKeyword", searchKeyword);
-	// 	sessionStorage.setItem("selectedYear", selectedYear);
-	// 	sessionStorage.setItem("selectedSupervisor", selectedSupervisor);
-	// };
 
-	// const retrieveSearchStateFromSessionStorage = () => {
-	// 	const storedSearchKeyword = sessionStorage.getItem("searchKeyword");
-	// 	const storedSelectedYear = sessionStorage.getItem("selectedYear");
-	// 	const storedSelectedSupervisor =
-	// 		sessionStorage.getItem("selectedSupervisor");
-
-	// 	setSearchKeyword(storedSearchKeyword || "");
-	// 	setSelectedYear(storedSelectedYear || "");
-	// 	setSelectedSupervisor(storedSelectedSupervisor || "");
 	const handlePageChange = (pageNumber) => {
 		setCurrentPage(pageNumber);
 	};
@@ -263,8 +249,14 @@ const SearchResults = () => {
 		setAppeared(true);
 	}, []);
 	const handleSortByPopularityChange = () => {
+		console.log("gooooo");
 		setSortByPopularity(!sortByPopularity);
 	};
+	useEffect(() => {
+
+		searchFirestore(searchKeyword, selectedYear, selectedSupervisor);
+
+	}, [searchFirestore, searchKeyword, selectedSupervisor, selectedYear, sortByPopularity]);
 
 	return (
 		<div className="searchpage-container">
@@ -417,7 +409,8 @@ const SearchResults = () => {
 												target="_blank"
 												rel="noreferrer"
 												className="title"
-												onClick={clickCounter(result.id.toString())}
+												onClick={() => clickCounter(result)}
+
 											>
 												{result.title}
 											</a>

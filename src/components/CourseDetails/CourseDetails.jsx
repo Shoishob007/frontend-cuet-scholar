@@ -50,6 +50,8 @@ const CourseDetails = () => {
         q = query(q, where("year", "==", parseInt(year)));
       }
 
+
+
       const querySnapshot = await getDocs(q);
       const documentData = querySnapshot.docs.map((doc) => doc.data());
       // setDocuments(documentData);
@@ -147,7 +149,7 @@ const CourseDetails = () => {
           q = query(q, where("supervisor", "==", selectedSupervisor));
         }
         if (sortByPopularity) {
-          q = query(q, orderBy("count", "desc"));
+          q = query(q, orderBy("counter", "desc"));
         }
 
 
@@ -169,7 +171,7 @@ const CourseDetails = () => {
     };
 
     fetchDocuments();
-  }, [courseName, name, selectedYear, selectedSupervisor, currentPage]);
+  }, [courseName, name, selectedYear, selectedSupervisor, currentPage, sortByPopularity]);
 
   useEffect(() => {
     const auth = getAuth();
@@ -201,8 +203,9 @@ const CourseDetails = () => {
   };
 
   const openDocumentInNewWindow = (document) => {
-    clickCounter(document.id.toString())
     window.open(document.url, "_blank");
+    clickCounter(document)
+
 
   };
   const [isHeadingAnimated, setIsHeadingAnimated] = useState(false);

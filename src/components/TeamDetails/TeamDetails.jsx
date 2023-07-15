@@ -40,9 +40,6 @@ const TeamDetails = () => {
       if (year) {
         q = query(q, where("year", "==", parseInt(year)));
       }
-      if (sortByPopularity) {
-        q = query(q, orderBy("count", "desc"));
-      }
 
 
       const querySnapshot = await getDocs(q);
@@ -118,9 +115,19 @@ const TeamDetails = () => {
     const fetchDocuments = async () => {
       try {
         const booksRef = collection(db, "Thesis");
-        const q = query(booksRef, where("supervisor", "==", name));
-        const querySnapshot = await getDocs(q);
+        let q = query(booksRef);
 
+        if (sortByPopularity) {
+          q = query(
+            q,
+
+            orderBy("counter", "desc")
+          );
+        }
+        q = query(q, where("supervisor", "==", name));
+
+
+        const querySnapshot = await getDocs(q);
         const documentData = querySnapshot.docs.map((doc) => doc.data());
         setDocuments(documentData);
       } catch (error) {
@@ -129,7 +136,9 @@ const TeamDetails = () => {
     };
 
     fetchDocuments();
-  }, [name]);
+  }, [name, sortByPopularity]);
+
+
 
   useEffect(() => {
     const auth = getAuth();
@@ -148,8 +157,7 @@ const TeamDetails = () => {
   };
 
   const openDocumentInNewWindow = (document) => {
-    clickCounter(document.id.toString())
-
+    clickCounter(document);
     window.open(document.url, "_blank");
 
   };

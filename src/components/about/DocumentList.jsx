@@ -17,7 +17,7 @@ const DocumentList = () => {
   const documentsPerPage = 10;
   useEffect(() => {
     fetchDocuments();
-  }, [selectedYear, selectedSupervisor]);
+  }, [selectedYear, selectedSupervisor, sortByPopularity]);
 
   const fetchDocuments = async () => {
     try {
@@ -32,7 +32,7 @@ const DocumentList = () => {
         q = query(q, where("supervisor", "==", selectedSupervisor));
       }
       if (sortByPopularity) {
-        q = query(q, orderBy("count", "desc"));
+        q = query(q, orderBy("counter", "desc"));
       }
 
       const querySnapshot = await getDocs(q);
@@ -74,6 +74,14 @@ const DocumentList = () => {
   const handleSortByPopularityChange = () => {
     setSortByPopularity(!sortByPopularity);
   };
+  const openDocumentInNewWindow = (document) => {
+    window.open(document.url, "_blank");
+    clickCounter(document)
+
+
+  };
+
+  console.log(currentDocuments);
 
 
   return (
@@ -210,7 +218,8 @@ const DocumentList = () => {
                   target="_blank"
                   rel="noreferrer"
                   className="title"
-                  onClick={clickCounter(document.id.toString())}
+                  style={{ cursor: "pointer" }}
+                  onClick={() => openDocumentInNewWindow(document)}
                 >
                   {document.title}
                 </a>

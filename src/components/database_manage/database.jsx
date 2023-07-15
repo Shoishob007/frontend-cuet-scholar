@@ -99,6 +99,7 @@ const DocumentForm = () => {
       supervisor: supervisor,
       summary: summary,
       category: category,
+      counter: 0,
     };
 
     try {
