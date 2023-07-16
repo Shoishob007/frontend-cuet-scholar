@@ -63,9 +63,9 @@ const Hero = () => {
                 Join us to discover groundbreaking research papers and advance your knowledge in your field of interest.
               </p>
               <div className="button">
-                <Link to="/register">
+                <Link to="/contact">
                   <button className="primary-btn" type="submit">
-                    REGISTER NOW <i className="fa fa-long-arrow-alt-right"></i>
+                    SEND YOURS <i className="fa fa-long-arrow-alt-right"></i>
                   </button>
                 </Link>
                 <Link to="/courses">
